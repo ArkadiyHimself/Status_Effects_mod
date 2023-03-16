@@ -1,6 +1,9 @@
 package net.arkadiyhimself.statuseffects;
 
 import com.mojang.logging.LogUtils;
+import net.arkadiyhimself.statuseffects.blocks.Modblocks;
+import net.arkadiyhimself.statuseffects.effects.ModMobEffects;
+import net.arkadiyhimself.statuseffects.items.Moditems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -31,6 +34,9 @@ public class Status_Effects
     public Status_Effects()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModMobEffects.register(modEventBus);
+        Moditems.register(modEventBus);
+        Modblocks.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
