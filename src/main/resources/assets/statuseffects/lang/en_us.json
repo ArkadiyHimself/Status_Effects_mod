@@ -1,4 +1,5 @@
 {
-  "effect.statuseffects.stun": "Stunned!",
-  "effect.statuseffects.deafening": "Deaf"
+  "effect.statuseffects.stun": "Stunned",
+  "effect.statuseffects.deafening": "Deaf",
+  "effect.statuseffects.freeze": "Frozen"
 }
