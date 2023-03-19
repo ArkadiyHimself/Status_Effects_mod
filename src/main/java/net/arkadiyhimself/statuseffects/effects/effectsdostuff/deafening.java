@@ -25,10 +25,7 @@ public class deafening extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity p_19467_, int p_19468_) {
-        p_19467_.playSound(ModSounds.RINGING_DEAF.get(), 0.15F, 1.0F);
-        p_19467_.hurt(DamageSource.MAGIC, 1F);
         if(p_19467_ instanceof Warden) {
-
         }
         super.applyEffectTick(p_19467_, p_19468_);
     }

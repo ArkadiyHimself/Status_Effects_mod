@@ -1,7 +1,11 @@
 package net.arkadiyhimself.statuseffects;
 
 import net.arkadiyhimself.statuseffects.effects.ModMobEffect;
+import net.arkadiyhimself.statuseffects.sound.ModSounds;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -28,20 +32,28 @@ public class ModEventHandler {
 
     @SubscribeEvent
     static void naturaleffects(LivingDamageEvent event) {
+        LivingEntity entity = event.getEntity();
+        double x = entity.getX();
+        double y = entity.getY();
+        double z = entity.getZ();
+
         if(event.getSource() == DamageSource.FALL) {
             int i = (int) Math.ceil(event.getAmount() * 5);
             event.getEntity().addEffect(new MobEffectInstance(ModMobEffect.STUN.get(), Math.min(i, 150)));
         }
 
         if("sonic_boom".equals(event.getSource().getMsgId())) {
-            event.getEntity().addEffect(new MobEffectInstance(ModMobEffect.DEAFENING.get(), 20));
+            event.getEntity().addEffect(new MobEffectInstance(ModMobEffect.DEAFENING.get(), 200));
+            event.getEntity().level.playSound((Player)null , x, y, z, ModSounds.RINGING_LONG.get(), SoundSource.AMBIENT,5.0F, 10.0F);
+
         }
 
         if(event.getSource().isExplosion()) {
             int i = (int) Math.ceil(event.getAmount() * 5);
             event.getEntity().addEffect(new MobEffectInstance(ModMobEffect.STUN.get(), Math.min(i, 150)));
             if(event.getAmount() > 4) {
-            event.getEntity().addEffect(new MobEffectInstance(ModMobEffect.DEAFENING.get(), Math.min(i, 150)));
+                event.getEntity().level.playSound((Player)null , x, y, z, ModSounds.RINGING_LONG.get(), SoundSource.AMBIENT,5.0F, 10.0F);
+                event.getEntity().addEffect(new MobEffectInstance(ModMobEffect.DEAFENING.get(), Math.min(i, 150)*2));
             }
         }
 
