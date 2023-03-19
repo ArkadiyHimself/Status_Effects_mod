@@ -1,20 +1,10 @@
 package net.arkadiyhimself.statuseffects.effects.effectsdostuff;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
-import net.arkadiyhimself.statuseffects.sound.ModSounds;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.monster.warden.Warden;
-import org.jetbrains.annotations.Nullable;
+
 
 public class deafening extends MobEffect {
 

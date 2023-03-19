@@ -60,6 +60,10 @@ public class ModEventHandler {
         if(event.getSource() == DamageSource.FREEZE) {
             event.getEntity().addEffect(new MobEffectInstance(ModMobEffect.FREEZE.get(), 100));
         }
+        if(event.getEntity().hasEffect(ModMobEffect.DOOMED.get())) {
+            event.getEntity().removeEffect(ModMobEffect.DOOMED.get());
+            event.getEntity().kill();
+        }
     }
 
 }

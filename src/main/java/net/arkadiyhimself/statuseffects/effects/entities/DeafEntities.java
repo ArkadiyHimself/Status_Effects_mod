@@ -3,7 +3,10 @@ package net.arkadiyhimself.statuseffects.effects.entities;
 import net.arkadiyhimself.statuseffects.effects.ModMobEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.level.Level;
@@ -12,15 +15,10 @@ import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.gameevent.vibrations.VibrationListener;
 import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 
-public class DeafEntities extends Warden {
-    public DeafEntities(EntityType<? extends Monster> p_219350_, Level p_219351_) {
-        super(p_219350_, p_219351_);
-    }
+@Mixin(Warden.class)
+public class DeafEntities {
 
-   @Override
-    public boolean shouldListen(ServerLevel p_219370_, GameEventListener p_219371_, BlockPos p_219372_, GameEvent p_219373_, GameEvent.Context p_219374_) {
-        if (this.hasEffect(ModMobEffect.DEAFENING.get())) { return false; }
-        else { return super.shouldListen(p_219370_, p_219371_, p_219372_, p_219373_, p_219374_); }
-    }
 }

@@ -1,5 +1,7 @@
 {
   "effect.statuseffects.stun": "Stunned",
   "effect.statuseffects.deafening": "Deaf",
-  "effect.statuseffects.freeze": "Frozen"
+  "effect.statuseffects.freeze": "Frozen",
+  "effect.statuseffects.doomed": "YOU ARE DOOMED"
+
 }
