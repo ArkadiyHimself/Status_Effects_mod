@@ -1,7 +1,12 @@
 buildscript {
     repositories {
-        maven { url = ""}
-        maven {}
+        maven { url = 'https://maven.minecraftforge.net/' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 
@@ -11,12 +16,20 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
 version = '0.0.1-1.19.3'
 group = 'net.arkadiyhimself.statuseffects'
 archivesBaseName = 'statuseffects'
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+mixin {
+    add sourceSets.main, "statuseffects.refmap.json"
+
+    config "statuseffects.mixins.json"
+}
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
@@ -121,11 +134,11 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19.3-44.1.23'
-
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
 
@@ -141,12 +154,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "statuseffects",
-                "Specification-Vendor"    : "statuseffectssareus",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "statuseffectssareus",
+                "Specification-Title": "statuseffects",
+                "Specification-Vendor": "statuseffectssareus",
+                "Specification-Version": "1",
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"statuseffectssareus",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

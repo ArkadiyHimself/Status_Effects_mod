@@ -18,6 +18,9 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Snowball;
+import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -65,5 +68,14 @@ public class ModEventHandler {
             event.getEntity().kill();
         }
     }
+/*    @SubscribeEvent
+    static void freezingsnowball(ProjectileImpactEvent event) {
+        if(event.getProjectile() instanceof Snowball) {
+            if(event.getRayTraceResult().getType() == HitResult.Type.ENTITY) {
+                LivingEntity entity = event.getRayTraceResult();
+
+            }
+        }
+    } */
 
 }

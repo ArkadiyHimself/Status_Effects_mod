@@ -14,7 +14,7 @@ public class stunning extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity p_19467_, int p_19468_) {
-        p_19467_.setDeltaMovement(0,0,0);
+        p_19467_.hurt(DamageSource.MAGIC, 1F);
         super.applyEffectTick(p_19467_, p_19468_);
     }
 

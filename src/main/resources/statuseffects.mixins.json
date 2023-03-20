@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "net.arkadiyhimself.statuseffects.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "statuseffects.refmap.json",
+  "mixins": [
+    "MixinWarden"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}

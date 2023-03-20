@@ -1,0 +1,20 @@
+{
+  "ringing_deaf": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:ringing_deaf",
+        "stream": false
+      }
+    ]
+  },
+  "ringing_long": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:ringing_long",
+        "stream": false
+      }
+    ]
+  }
+}

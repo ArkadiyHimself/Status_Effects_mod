@@ -15,11 +15,11 @@ public class freeze extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity p_19467_, int p_19468_) {
-        p_19467_.setDeltaMovement(0,0,0);
-        super.applyEffectTick(p_19467_, p_19468_);
         if(p_19467_.fireImmune() || p_19467_.hasEffect(MobEffects.FIRE_RESISTANCE)) {
-            p_19467_.hurt(DamageSource.MAGIC, 1.5F);
+            p_19467_.hurt(DamageSource.MAGIC, 1.0F);
         }
+        super.applyEffectTick(p_19467_, p_19468_);
+
     }
 
     @Override
