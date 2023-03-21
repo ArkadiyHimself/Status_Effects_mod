@@ -28,7 +28,7 @@ public class ModMobEffect extends MobEffect {
             () -> new deafening(MobEffectCategory.HARMFUL, 4389348));
 
     public static final RegistryObject<MobEffect> FREEZE = EFFECTS.register("freeze",
-            () -> new ModMobEffect(MobEffectCategory.HARMFUL, 5784542).addAttributeModifier(Attributes.ATTACK_SPEED,
+            () -> new freeze(MobEffectCategory.HARMFUL, 5784542).addAttributeModifier(Attributes.ATTACK_SPEED,
                     "AF8B6E3F-3328-4C0A-AA36-5BA2BB9DBEF3", (double)-0.8F, AttributeModifier.Operation.ADDITION).
                     addAttributeModifier(Attributes.MOVEMENT_SPEED, "AF8B6E3F-3328-4C0A-AA36-5BA2BB9DBEF3",
                             (double)0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
