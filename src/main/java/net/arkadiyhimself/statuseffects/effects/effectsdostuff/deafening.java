@@ -1,7 +1,6 @@
 package net.arkadiyhimself.statuseffects.effects.effectsdostuff;
 
 import net.arkadiyhimself.statuseffects.effects.ModMobEffect;
-import net.arkadiyhimself.statuseffects.effects.effectsdostuff.mutingsound.SoundMuteHandler;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;

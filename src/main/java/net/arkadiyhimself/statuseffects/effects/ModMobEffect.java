@@ -3,10 +3,10 @@ package net.arkadiyhimself.statuseffects.effects;
 import net.arkadiyhimself.statuseffects.Status_Effects;
 import net.arkadiyhimself.statuseffects.effects.effectsdostuff.deafening;
 import net.arkadiyhimself.statuseffects.effects.effectsdostuff.freeze;
+import net.arkadiyhimself.statuseffects.effects.effectsdostuff.doomed;
 import net.arkadiyhimself.statuseffects.effects.effectsdostuff.stunning;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -22,19 +22,22 @@ public class ModMobEffect extends MobEffect {
     public static final DeferredRegister<MobEffect> EFFECTS =
             DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Status_Effects.MODID);
    public static final RegistryObject<MobEffect> STUN = EFFECTS.register("stun",
-            () -> new stunning(MobEffectCategory.HARMFUL, 3486368).addAttributeModifier(Attributes.MOVEMENT_SPEED,
-                    "AF8B6E3F-3328-4C0A-AA36-5BA2BB9DBEF3", (double)0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            () -> new stunning(MobEffectCategory.HARMFUL, 13859964).addAttributeModifier(Attributes.MOVEMENT_SPEED,
+                    "7107DE5E-7CE8-4030-940E-514C1F160890", (double)0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<MobEffect> DEAFENING = EFFECTS.register("deafening",
-            () -> new deafening(MobEffectCategory.HARMFUL, 4389348));
+            () -> new deafening(MobEffectCategory.HARMFUL, 1245439));
 
     public static final RegistryObject<MobEffect> FREEZE = EFFECTS.register("freeze",
-            () -> new freeze(MobEffectCategory.HARMFUL, 5784542).addAttributeModifier(Attributes.ATTACK_SPEED,
-                    "AF8B6E3F-3328-4C0A-AA36-5BA2BB9DBEF3", (double)-0.8F, AttributeModifier.Operation.ADDITION).
-                    addAttributeModifier(Attributes.MOVEMENT_SPEED, "AF8B6E3F-3328-4C0A-AA36-5BA2BB9DBEF3",
+            () -> new freeze(MobEffectCategory.HARMFUL, 8780799).addAttributeModifier(Attributes.ATTACK_SPEED,
+                            "7107DE5E-7CE8-4030-940E-514C1F160890", (double)-0.8F, AttributeModifier.Operation.ADDITION).
+                    addAttributeModifier(Attributes.MOVEMENT_SPEED, "7107DE5E-7CE8-4030-940E-514C1F160890",
                             (double)0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
+    public static final RegistryObject<MobEffect> DISARM = EFFECTS.register("disarm",
+            () -> new ModMobEffect(MobEffectCategory.HARMFUL, 16447222));
+
     public static final RegistryObject<MobEffect> DOOMED = EFFECTS.register("doomed",
-            () -> new deafening(MobEffectCategory.HARMFUL, 4389348));
+            () -> new doomed(MobEffectCategory.HARMFUL, 0));
 
 
 

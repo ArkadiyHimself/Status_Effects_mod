@@ -16,5 +16,23 @@
         "stream": false
       }
     ]
+  },
+  "doomed": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:doomed",
+        "stream": false
+      }
+    ]
+  },
+  "undoomed": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:undoomed",
+        "stream": false
+      }
+    ]
   }
 }

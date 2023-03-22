@@ -2,6 +2,6 @@
   "effect.statuseffects.stun": "Stunned",
   "effect.statuseffects.deafening": "Deaf",
   "effect.statuseffects.freeze": "Frozen",
-  "effect.statuseffects.doomed": "YOU ARE DOOMED"
-
+  "effect.statuseffects.doomed": "YOU ARE DOOMED",
+  "effect.statuseffects.disarm": "Disarmed"
 }

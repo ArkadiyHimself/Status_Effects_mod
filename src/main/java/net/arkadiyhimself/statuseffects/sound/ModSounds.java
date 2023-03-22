@@ -20,8 +20,13 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> RINGING_DEAF =
             registerSoundEvent("ringing_deaf");
-        public static final RegistryObject<SoundEvent> RINGING_LONG =
+    public static final RegistryObject<SoundEvent> RINGING_LONG =
             registerSoundEvent("ringing_long");
+    public static final RegistryObject<SoundEvent> DOOMED =
+            registerSoundEvent("doomed");
+
+    public static final RegistryObject<SoundEvent> UNDOOMED =
+            registerSoundEvent("undoomed");
 
     public static void register(IEventBus eventBus) {
         SOUND_EVENTS.register(eventBus);
