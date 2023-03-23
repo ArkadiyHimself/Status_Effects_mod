@@ -1,6 +1,8 @@
 package net.arkadiyhimself.statuseffects.effects.effectsdostuff;
 
-import net.arkadiyhimself.statuseffects.sound.ModSounds;
+import net.arkadiyhimself.statuseffects.sound.SE_Sounds;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +23,7 @@ public class doomed extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity p_19467_, int p_19468_) {
-        if(doplaysound){ p_19467_.playSound(ModSounds.UNDOOMED.get(), 5F, 1F); }
+        if(doplaysound){ Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.UNDOOMED.get(), 1.0F, 5.0F)); }
         super.applyEffectTick(p_19467_, p_19468_);
     }
 

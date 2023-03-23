@@ -1,16 +1,11 @@
 package net.arkadiyhimself.statuseffects.blocks;
 
 import net.arkadiyhimself.statuseffects.Status_Effects;
-import net.arkadiyhimself.statuseffects.items.Moditems;
-import net.arkadiyhimself.statuseffects.Status_Effects;
-import net.arkadiyhimself.statuseffects.items.Moditems;
+import net.arkadiyhimself.statuseffects.items.SE_ModItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DropExperienceBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -47,7 +42,7 @@ public class Modblocks {
     }
 
     private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block, CreativeModeTab tab) {
-        return Moditems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        return SE_ModItem.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
 }

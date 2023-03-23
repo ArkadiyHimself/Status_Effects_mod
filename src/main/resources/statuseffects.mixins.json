@@ -6,9 +6,9 @@
   "mixins": [
     "MixinWarden",
     "MixinEntityTypeTagsProvider",
-    "MixinLivingEntity",
-    "SoundEngineAccessor",
-    "SoundManagerAccessor"
+    "MixinSoundEngine",
+    "SoundManagerAccessor",
+    "MixinLivingEntity"
   ],
   "client": [
   ],

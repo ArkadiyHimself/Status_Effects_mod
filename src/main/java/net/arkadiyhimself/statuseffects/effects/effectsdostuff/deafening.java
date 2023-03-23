@@ -1,12 +1,10 @@
 package net.arkadiyhimself.statuseffects.effects.effectsdostuff;
 
-import net.arkadiyhimself.statuseffects.effects.ModMobEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
-import team.creative.creativecore.common.config.premade.curve.DecimalCurve;
 
 
 @Mod.EventBusSubscriber({Dist.CLIENT})
@@ -19,7 +17,6 @@ public class deafening extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity p_19467_, int p_19468_) {
-
         super.applyEffectTick(p_19467_, p_19468_);
     }
 

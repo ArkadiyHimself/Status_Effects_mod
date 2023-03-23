@@ -1,7 +1,7 @@
 {
-  "effect.statuseffects.stun": "Stunned",
-  "effect.statuseffects.deafening": "Deaf",
-  "effect.statuseffects.freeze": "Frozen",
-  "effect.statuseffects.doomed": "YOU ARE DOOMED",
-  "effect.statuseffects.disarm": "Disarmed"
+  "effect.statuseffects.stun": "§8Stunned",
+  "effect.statuseffects.deafening": "§1Deaf",
+  "effect.statuseffects.freeze": "§bFrozen",
+  "effect.statuseffects.doomed": "§4§lYOU ARE DOOMED",
+  "effect.statuseffects.disarm": "§7Disarmed"
 }

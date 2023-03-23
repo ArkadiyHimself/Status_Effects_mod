@@ -2,9 +2,9 @@ package net.arkadiyhimself.statuseffects;
 
 import com.mojang.logging.LogUtils;
 import net.arkadiyhimself.statuseffects.blocks.Modblocks;
-import net.arkadiyhimself.statuseffects.effects.ModMobEffect;
-import net.arkadiyhimself.statuseffects.items.Moditems;
-import net.arkadiyhimself.statuseffects.sound.ModSounds;
+import net.arkadiyhimself.statuseffects.effects.SE_MobEffect;
+import net.arkadiyhimself.statuseffects.items.SE_ModItem;
+import net.arkadiyhimself.statuseffects.sound.SE_Sounds;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -15,7 +15,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
-import team.creative.creativecore.common.config.premade.curve.DecimalCurve;
 
 @Mod(Status_Effects.MODID)
 public class Status_Effects
@@ -25,10 +24,10 @@ public class Status_Effects
     public Status_Effects()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModMobEffect.register(modEventBus);
-        Moditems.register(modEventBus);
+        SE_MobEffect.register(modEventBus);
+        SE_ModItem.register(modEventBus);
         Modblocks.register(modEventBus);
-        ModSounds.register(modEventBus);
+        SE_Sounds.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
