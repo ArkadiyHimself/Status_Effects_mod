@@ -18,7 +18,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '0.0.9-1.19.3'
+version = '0.1.0-1.19.3'
 group = 'net.arkadiyhimself.statuseffects'
 archivesBaseName = 'statuseffects'
 
