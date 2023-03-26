@@ -1,16 +1,17 @@
-package net.arkadiyhimself.statuseffects;
+package net.arkadiyhimself.statuseffects.event;
 
-import com.mojang.blaze3d.audio.Library;
+import net.arkadiyhimself.statuseffects.Status_Effects;
 import net.arkadiyhimself.statuseffects.effects.SE_MobEffect;
+import net.arkadiyhimself.statuseffects.networking.Messages;
+import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
+import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
+import net.arkadiyhimself.statuseffects.networking.packets.UndoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.sound.SE_Sounds;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.Sound;
-import net.minecraft.client.sounds.ChannelAccess;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -30,9 +31,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = Status_Effects.MODID)
 public class SE_EventHandler {
@@ -47,15 +46,23 @@ public class SE_EventHandler {
 
         if ("sonic_boom".equals(event.getSource().getMsgId())) {
             event.getEntity().addEffect(new MobEffectInstance(SE_MobEffect.DEAFENING.get(), 200));
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.RINGING_LONG.get(), 1.0F, 5.0F));
+            if(event.getEntity() instanceof Player) {
+//                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.RINGING_LONG.get(), 1.0F, 5.0F));
+                Entity entity = event.getEntity();
+                Messages.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
+            }
         }
 
         if (event.getSource().isExplosion()) {
             int i = (int) Math.ceil(event.getAmount() * 5);
             event.getEntity().addEffect(new MobEffectInstance(SE_MobEffect.STUN.get(), Math.min(i, 150)));
             if (event.getAmount() > 4) {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.RINGING_LONG.get(), 1.0F, 5.0F));
                 event.getEntity().addEffect(new MobEffectInstance(SE_MobEffect.DEAFENING.get(), Math.min(i, 150) * 2));
+                if(event.getEntity() instanceof Player) {
+                    Entity entity = event.getEntity();
+//                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.RINGING_LONG.get(), 1.0F, 5.0F));
+                    Messages.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
+                }
             }
         }
 
@@ -63,9 +70,12 @@ public class SE_EventHandler {
             event.getEntity().addEffect(new MobEffectInstance(SE_MobEffect.FREEZE.get(), 100));
         }
         if (event.getEntity().hasEffect(SE_MobEffect.DOOMED.get())) {
-            event.getEntity().removeEffect(SE_MobEffect.DOOMED.get());
-            if(event.isCancelable()) { event.setCanceled(true); }
-            event.getEntity().kill();
+            if(event.getEntity().getMaxHealth() <= 100) {
+                event.getEntity().removeEffect(SE_MobEffect.DOOMED.get());
+                event.setAmount(Float.MAX_VALUE);
+            } else {
+                event.setAmount(event.getAmount() * 2);
+            }
         }
     }
 
@@ -99,8 +109,11 @@ public class SE_EventHandler {
         if(event.getSource() instanceof EntityDamageSource) {
             DamageSource source = event.getSource();
             Entity entity = ((EntityDamageSource)source).getEntity();
-            if(((LivingEntity)entity).hasEffect(SE_MobEffect.DISARM.get())) {
-                event.setCanceled(true); }
+            if(entity instanceof LivingEntity) {
+                if(((LivingEntity)entity).hasEffect(SE_MobEffect.DISARM.get())) {
+                    event.setCanceled(true);
+                }
+            }
         }
     }
 
@@ -127,7 +140,9 @@ public class SE_EventHandler {
     @SubscribeEvent
     static void effectWasApplied(MobEffectEvent.Added event) {
         if(event.getEffectInstance().getEffect() == SE_MobEffect.DOOMED.get() && event.getEntity() instanceof Player) {
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.DOOMED.get(), 1.0F, 5.0F));
+//            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.DOOMED.get(), 1.0F, 1.0F));
+            Entity entity = event.getEntity();
+            Messages.sentToPlayer(new DoomedSoundS2CPacket(), (ServerPlayer) entity);
         }
         if(event.getEntity() instanceof Warden && event.getEffectInstance().getEffect() == SE_MobEffect.DISARM.get()) {
             SonicBoom.setCooldown(event.getEntity(), 0);

@@ -12,7 +12,7 @@ public class SE_Sounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.
             create(ForgeRegistries.SOUND_EVENTS, Status_Effects.MODID);
 
-    private static RegistryObject<SoundEvent> registerSoundEvent(String path) {
+   public static RegistryObject<SoundEvent> registerSoundEvent(String path) {
         return SOUND_EVENTS.register(path, () -> SoundEvent.createFixedRangeEvent
                 (new ResourceLocation(Status_Effects.MODID, path), 1F));
     }
@@ -26,6 +26,23 @@ public class SE_Sounds {
 
     public static final RegistryObject<SoundEvent> UNDOOMED =
             registerSoundEvent("undoomed");
+
+    public static final RegistryObject<SoundEvent> WHISPER1 =
+            registerSoundEvent("whisper1");
+
+    public static final RegistryObject<SoundEvent> WHISPER2 =
+            registerSoundEvent("whisper2");
+
+    public static final RegistryObject<SoundEvent> WHISPER3 =
+            registerSoundEvent("whisper3");
+
+    public static final RegistryObject<SoundEvent> WHISPER4 =
+            registerSoundEvent("whisper4");
+
+    public static final RegistryObject<SoundEvent> WHISPER5 =
+            registerSoundEvent("whisper5");
+
+
 
     public static void register(IEventBus eventBus) {
         SOUND_EVENTS.register(eventBus);

@@ -34,5 +34,50 @@
         "stream": false
       }
     ]
+  },
+  "whisper1": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:whisper1",
+        "stream": false
+      }
+    ]
+  },
+  "whisper2": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:whisper2",
+        "stream": false
+      }
+    ]
+  },
+  "whisper3": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:whisper3",
+        "stream": false
+      }
+    ]
+  },
+  "whisper4": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:whisper4",
+        "stream": false
+      }
+    ]
+  },
+  "whisper5": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "statuseffects:whisper5",
+        "stream": false
+      }
+    ]
   }
 }

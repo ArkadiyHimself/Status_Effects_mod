@@ -4,11 +4,10 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "statuseffects.refmap.json",
   "mixins": [
-    "MixinWarden",
-    "MixinEntityTypeTagsProvider",
+    "MixinLivingEntity",
     "MixinSoundEngine",
-    "SoundManagerAccessor",
-    "MixinLivingEntity"
+    "MixinWarden",
+    "SoundManagerAccessor"
   ],
   "client": [
   ],
