@@ -28,13 +28,9 @@ public class doomed extends MobEffect {
     double x;
     double y;
     double z;
-    double dx;
-    double dy;
-    double dz;
-
     boolean doplaysound = false;
-    boolean dospawnsoul;
-    boolean dowhisper;
+    boolean dospawnsoul = false;
+    boolean dowhisper = false;
     Random random = new Random();
     int whispercooldown = 80;
 
@@ -75,19 +71,19 @@ public class doomed extends MobEffect {
             // here im using circular function for X and Z (X**2 + Z**2 = R**2) coordinates to make a horizontal circle
             // Y variants are just a vertical line
             y = random.nextDouble(0.3, 1.5);
-            x = random.nextDouble(0, 0.5);
+            x = random.nextDouble(-0.5, 0.5);
             z = Math.sqrt(0.25 - x * x);
-            // here game randomly decides to make X or Z negative coordinates
-            boolean negativeX = random.nextBoolean();
+            // here game randomly decides to make Z coordinate negative
             boolean negativeZ = random.nextBoolean();
-            x = negativeX ? x * (-1) : x;
             z = negativeZ ? z * (-1) : z;
             // in the end, the area in which soul particles can spawn looks like side of a cylinder
             Minecraft.getInstance().level.addParticle(SE_Particles.DOOMED_SOUL.get(), true,
-                    pLivingEntity.getX() + x, pLivingEntity.getY() + y, pLivingEntity.getZ() + z, dx.get() * 2.3, dy.get() * -0.5 + 0.1, dz.get() * 2.3);
+                    pLivingEntity.getX() + x, pLivingEntity.getY() + y, pLivingEntity.getZ() + z,
+                    dx.get() * 2.6, dy.get() * 0.2 + 0.1, dz.get() * 2.6);
         }
 
-        if (dowhisper && !doplaysound && pLivingEntity == Minecraft.getInstance().player) {
+        if (dowhisper && !doplaysound) {
+            // the game randomly decides which whisper sound to play
             int num = random.nextInt(0,  5);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(whispers.get(num), 1F, 1F));
             whispercooldown = random.nextInt(200, 240);

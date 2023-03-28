@@ -1,6 +1,7 @@
 package net.arkadiyhimself.statuseffects;
 
 import com.mojang.logging.LogUtils;
+import net.arkadiyhimself.statuseffects.Attributes.SE_Attributes;
 import net.arkadiyhimself.statuseffects.blocks.SE_Blocks;
 import net.arkadiyhimself.statuseffects.effects.SE_MobEffect;
 import net.arkadiyhimself.statuseffects.items.SE_ModItem;
@@ -33,6 +34,7 @@ public class Status_Effects
         SE_Blocks.register(modEventBus);
         SE_Sounds.register(modEventBus);
         SE_Particles.register(modEventBus);
+        SE_Attributes.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);

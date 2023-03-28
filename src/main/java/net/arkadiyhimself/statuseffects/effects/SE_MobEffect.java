@@ -23,7 +23,7 @@ public class SE_MobEffect extends MobEffect {
             DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Status_Effects.MODID);
    public static final RegistryObject<MobEffect> STUN = EFFECTS.register("stun",
             () -> new stunning(MobEffectCategory.HARMFUL, 13859964).addAttributeModifier(Attributes.MOVEMENT_SPEED,
-                    "7107DE5E-7CE8-4030-940E-514C1F160890", (double)-0.5F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    "7107DE5E-7CE8-4030-940E-514C1F160890", (double)-0.99F, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<MobEffect> DEAFENING = EFFECTS.register("deafening",
             () -> new deafening(MobEffectCategory.HARMFUL, 1245439));
 
