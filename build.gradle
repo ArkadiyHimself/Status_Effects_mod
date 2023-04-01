@@ -1,26 +1,18 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net/' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
-    }
-}
 plugins {
     id 'eclipse'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'net.minecraftforge.gradle'
 
-version = '0.1.0-1.19.3'
-group = 'net.arkadiyhimself.statuseffects'
-archivesBaseName = 'statuseffects'
+version = "${mod_version}-${minecraft_version}"
+group = mod_base_package
+archivesBaseName = mod_id
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -89,24 +81,70 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name = '100Media'
+        url = 'https://maven.100media.dev/'
+    }
+}
+configurations {
+    shade
+    implementation.extendsFrom shade
 }
 dependencies {
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    minecraft 'net.minecraftforge:forge:1.19.3-44.1.23'
-    implementation fg.deobf("curse.maven:creativecore-257814:4407520")
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
+    implementation fg.deobf("curse.maven:creativecore-${creativecore_version}")
+    shade fg.deobf("dev._100media.capabilitysyncer:capabilitysyncer:${capabilitysyncer_version}")
+}
+def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta', "${mod_id}.mixins.json".toString()]
+def intoTargets = ["$rootDir/out/production/resources/", "$rootDir/out/production/${project.name}.main/", "$rootDir/bin/main/"]
+def replaceProperties = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version,
+                         mod_authors: mod_authors, mod_description: mod_description,
+                         minecraft_version_range: minecraft_version_range, forge_version_range: forge_version_range,
+                         loader_version_range: loader_version_range]
+processResources {
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching(resourceTargets) {
+        expand replaceProperties
+    }
+
+    intoTargets.each { target ->
+        if (file(target).exists()) {
+            copy {
+                from(sourceSets.main.resources) {
+                    include resourceTargets
+                    expand replaceProperties
+                }
+                into target
+            }
+        }
+    }
 }
 jar {
+    archiveClassifier = 'slim'
     manifest {
         attributes([
-                "Specification-Title": "statuseffects",
-                "Specification-Vendor": "statuseffectssareus",
+                "Specification-Title": mod_id,
+                "Specification-Vendor": mod_authors,
                 "Specification-Version": "1",
                 "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"statuseffectssareus",
+                "Implementation-Version": mod_version,
+                "Implementation-Vendor" :mod_authors,
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+}
+shadowJar {
+    archiveClassifier = ''
+    configurations = [project.configurations.shade]
+    relocate 'dev._100media.capabilitysyncer', "${project.group}.relocated.capabilitysyncer"
+    finalizedBy 'reobfShadowJar'
+}
+assemble.dependsOn shadowJar
+reobf {
+    shadowJar {}
 }
 jar.finalizedBy('reobfJar')
 publishing {

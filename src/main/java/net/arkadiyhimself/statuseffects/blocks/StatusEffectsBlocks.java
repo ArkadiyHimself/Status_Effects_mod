@@ -1,7 +1,7 @@
 package net.arkadiyhimself.statuseffects.blocks;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
-import net.arkadiyhimself.statuseffects.items.SE_ModItem;
+import net.arkadiyhimself.statuseffects.StatusEffects;
+import net.arkadiyhimself.statuseffects.items.StatusEffectsModItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -13,9 +13,9 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-public class SE_Blocks {
+public class StatusEffectsBlocks {
     public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, Status_Effects.MODID);
+            DeferredRegister.create(ForgeRegistries.BLOCKS, StatusEffects.MODID);
 
 /*    public static final RegistryObject<Block> PLUTONIUM_BLOCK =  registerBlock("plutonium_block",
             () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
@@ -42,7 +42,7 @@ public class SE_Blocks {
     }
 
     private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block, CreativeModeTab tab) {
-        return SE_ModItem.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        return StatusEffectsModItem.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
 }

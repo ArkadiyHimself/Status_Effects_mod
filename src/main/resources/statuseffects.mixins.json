@@ -2,7 +2,7 @@
   "required": true,
   "package": "net.arkadiyhimself.statuseffects.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "statuseffects.refmap.json",
+  "refmap": "${mod_id}.refmap.json",
   "mixins": [
     "MixinLivingEntity",
     "MixinSoundEngine",

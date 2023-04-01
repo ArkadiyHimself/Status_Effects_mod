@@ -1,6 +1,6 @@
 package net.arkadiyhimself.statuseffects.networking.packets;
 
-import net.arkadiyhimself.statuseffects.sound.SE_Sounds;
+import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,7 +22,7 @@ public class DoomedSoundS2CPacket {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             Minecraft.getInstance().getSoundManager().
-                    play(SimpleSoundInstance.forUI(SE_Sounds.DOOMED.get(), 1.0F, 0.4F));
+                    play(SimpleSoundInstance.forUI(StatusEffectsSounds.DOOMED.get(), 1.0F, 0.4F));
         });
         context.setPacketHandled(true);
         return true;

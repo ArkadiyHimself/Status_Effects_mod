@@ -1,13 +1,13 @@
 package net.arkadiyhimself.statuseffects;
 
 import com.mojang.logging.LogUtils;
-import net.arkadiyhimself.statuseffects.Attributes.SE_Attributes;
-import net.arkadiyhimself.statuseffects.blocks.SE_Blocks;
-import net.arkadiyhimself.statuseffects.effects.SE_MobEffect;
-import net.arkadiyhimself.statuseffects.items.SE_ModItem;
+import net.arkadiyhimself.statuseffects.Attributes.StatusEffectsAttributes;
+import net.arkadiyhimself.statuseffects.blocks.StatusEffectsBlocks;
+import net.arkadiyhimself.statuseffects.effects.StatusEffectsMobEffect;
+import net.arkadiyhimself.statuseffects.items.StatusEffectsModItem;
 import net.arkadiyhimself.statuseffects.networking.Messages;
-import net.arkadiyhimself.statuseffects.particles.SE_Particles;
-import net.arkadiyhimself.statuseffects.sound.SE_Sounds;
+import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
+import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -17,24 +17,23 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.simple.SimpleChannel;
 import org.slf4j.Logger;
 
-@Mod(Status_Effects.MODID)
-public class Status_Effects
+@Mod(StatusEffects.MODID)
+public class StatusEffects
 {
     public static final String MODID = "statuseffects";
     private static final Logger LOGGER = LogUtils.getLogger();
-    public Status_Effects()
+    public StatusEffects()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        SE_MobEffect.register(modEventBus);
-        SE_ModItem.register(modEventBus);
-        SE_Blocks.register(modEventBus);
-        SE_Sounds.register(modEventBus);
-        SE_Particles.register(modEventBus);
-        SE_Attributes.register(modEventBus);
+        StatusEffectsMobEffect.register(modEventBus);
+        StatusEffectsModItem.register(modEventBus);
+        StatusEffectsBlocks.register(modEventBus);
+        StatusEffectsSounds.register(modEventBus);
+        StatusEffectsParticles.register(modEventBus);
+        StatusEffectsAttributes.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);

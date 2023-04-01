@@ -1,14 +1,14 @@
 package net.arkadiyhimself.statuseffects.items;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
+import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class SE_ModItem {
+public class StatusEffectsModItem {
     public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, Status_Effects.MODID);
+            DeferredRegister.create(ForgeRegistries.ITEMS, StatusEffects.MODID);
 
 /*    public static final RegistryObject<Item> PLUTONIUM = ITEMS.register("plutonium",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.TUTORIAL_TAB)));

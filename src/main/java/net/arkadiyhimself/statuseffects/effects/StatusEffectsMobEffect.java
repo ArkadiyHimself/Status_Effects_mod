@@ -1,6 +1,6 @@
 package net.arkadiyhimself.statuseffects.effects;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
+import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.effects.effectsdostuff.deafening;
 import net.arkadiyhimself.statuseffects.effects.effectsdostuff.freeze;
 import net.arkadiyhimself.statuseffects.effects.effectsdostuff.doomed;
@@ -17,10 +17,10 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 
-public class SE_MobEffect extends MobEffect {
+public class StatusEffectsMobEffect extends MobEffect {
 
     public static final DeferredRegister<MobEffect> EFFECTS =
-            DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Status_Effects.MODID);
+            DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, StatusEffects.MODID);
    public static final RegistryObject<MobEffect> STUN = EFFECTS.register("stun",
             () -> new stunning(MobEffectCategory.HARMFUL, 13859964).addAttributeModifier(Attributes.MOVEMENT_SPEED,
                     "7107DE5E-7CE8-4030-940E-514C1F160890", (double)-0.99F, AttributeModifier.Operation.MULTIPLY_TOTAL));
@@ -35,18 +35,18 @@ public class SE_MobEffect extends MobEffect {
 
 
     public static final RegistryObject<MobEffect> DISARM = EFFECTS.register("disarm",
-            () -> new SE_MobEffect(MobEffectCategory.HARMFUL, 16447222));
+            () -> new StatusEffectsMobEffect(MobEffectCategory.HARMFUL, 16447222));
 
     public static final RegistryObject<MobEffect> DOOMED = EFFECTS.register("doomed",
             () -> new doomed(MobEffectCategory.HARMFUL, 0));
 
 
 
-    protected SE_MobEffect(MobEffectCategory p_19451_, int p_19452_) {
+    protected StatusEffectsMobEffect(MobEffectCategory p_19451_, int p_19452_) {
         super(p_19451_, p_19452_);
     }
 
-    public static List<Object> EFFECTS(SE_MobEffect effect) {return null;}
+    public static List<Object> EFFECTS(StatusEffectsMobEffect effect) {return null;}
 
     @Override
     public MobEffect addAttributeModifier(Attribute attribute, String p_19474_, double number, AttributeModifier.Operation operation) {
