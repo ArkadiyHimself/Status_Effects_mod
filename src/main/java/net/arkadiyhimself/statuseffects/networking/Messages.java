@@ -1,10 +1,9 @@
 package net.arkadiyhimself.statuseffects.networking;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
+import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.UndoomedSoundS2CPacket;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -20,7 +19,7 @@ public class Messages {
     }
     public static void register() {
         SimpleChannel net = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(Status_Effects.MODID, "messages"))
+                .named(new ResourceLocation(StatusEffects.MODID, "messages"))
                 .networkProtocolVersion(() -> "1.0")
                 .clientAcceptedVersions(s -> true)
                 .serverAcceptedVersions(s -> true)

@@ -1,6 +1,6 @@
 package net.arkadiyhimself.statuseffects.Attributes;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
+import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -8,9 +8,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class SE_Attributes {
+public class StatusEffectsAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTE =
-            DeferredRegister.create(ForgeRegistries.ATTRIBUTES, Status_Effects.MODID);
+            DeferredRegister.create(ForgeRegistries.ATTRIBUTES, StatusEffects.MODID);
     public static void register(IEventBus eventBus) {
         ATTRIBUTE.register(eventBus);
     }

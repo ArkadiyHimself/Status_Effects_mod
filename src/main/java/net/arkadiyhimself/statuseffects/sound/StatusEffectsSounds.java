@@ -1,6 +1,6 @@
 package net.arkadiyhimself.statuseffects.sound;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
+import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -8,13 +8,13 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class SE_Sounds {
+public class StatusEffectsSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.
-            create(ForgeRegistries.SOUND_EVENTS, Status_Effects.MODID);
+            create(ForgeRegistries.SOUND_EVENTS, StatusEffects.MODID);
 
    public static RegistryObject<SoundEvent> registerSoundEvent(String path) {
         return SOUND_EVENTS.register(path, () -> SoundEvent.createFixedRangeEvent
-                (new ResourceLocation(Status_Effects.MODID, path), 1F));
+                (new ResourceLocation(StatusEffects.MODID, path), 1F));
     }
 
     public static final RegistryObject<SoundEvent> RINGING_DEAF =

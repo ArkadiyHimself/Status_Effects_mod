@@ -1,7 +1,7 @@
 package net.arkadiyhimself.statuseffects.mixin.StunMechanic;
 
-import net.arkadiyhimself.statuseffects.Attributes.SE_Attributes;
-import net.arkadiyhimself.statuseffects.effects.SE_MobEffect;
+import net.arkadiyhimself.statuseffects.Attributes.StatusEffectsAttributes;
+import net.arkadiyhimself.statuseffects.effects.StatusEffectsMobEffect;
 import net.arkadiyhimself.statuseffects.interfaces.StunScaleInterface;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
@@ -32,13 +32,13 @@ public abstract class StunLivingEntity implements StunScaleInterface {
 
     @Override
     public boolean isStunned() {
-        return this.hasEffect(SE_MobEffect.STUN.get());
+        return this.hasEffect(StatusEffectsMobEffect.STUN.get());
     }
     int MAX_STUN_POINTS = 100;
 
     @Override
     public int getCurrentStunPoints() {
-        return (int) Math.ceil(this.getAttributeValue(SE_Attributes.STUN_POINTS.get()));
+        return (int) Math.ceil(this.getAttributeValue(StatusEffectsAttributes.STUN_POINTS.get()));
     }
 
     @Override
@@ -52,11 +52,11 @@ public abstract class StunLivingEntity implements StunScaleInterface {
 
     @Override
     public void addStunPoints(int amount) {
-        if(this.getAttributeValue(SE_Attributes.STUN_POINTS.get()) + amount < MAX_STUN_POINTS) {
-            this.getAttribute(SE_Attributes.STUN_POINTS.get()).addPermanentModifier(stunAdd(amount));
+        if(this.getAttributeValue(StatusEffectsAttributes.STUN_POINTS.get()) + amount < MAX_STUN_POINTS) {
+            this.getAttribute(StatusEffectsAttributes.STUN_POINTS.get()).addPermanentModifier(stunAdd(amount));
         } else {
-            this.getAttribute(SE_Attributes.STUN_POINTS.get()).addPermanentModifier(stunAdd(MAX_STUN_POINTS));
-            this.addEffect(new MobEffectInstance(SE_MobEffect.STUN.get(), 50));
+            this.getAttribute(StatusEffectsAttributes.STUN_POINTS.get()).addPermanentModifier(stunAdd(MAX_STUN_POINTS));
+            this.addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), 50));
         }
     }
 }

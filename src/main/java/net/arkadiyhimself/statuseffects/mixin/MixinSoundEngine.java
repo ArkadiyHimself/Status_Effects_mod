@@ -1,7 +1,7 @@
 package net.arkadiyhimself.statuseffects.mixin;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
-import net.arkadiyhimself.statuseffects.effects.SE_MobEffect;
+import net.arkadiyhimself.statuseffects.StatusEffects;
+import net.arkadiyhimself.statuseffects.effects.StatusEffectsMobEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.resources.ResourceLocation;
@@ -17,15 +17,15 @@ public class MixinSoundEngine {
 	@Redirect(method = "Lnet/minecraft/client/sounds/SoundEngine;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)V",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/sounds/SoundInstance;getVolume()F"))
 	private float SE_calculateSoundVolume(SoundInstance sound) {
-		if(Minecraft.getInstance().level != null && Minecraft.getInstance().player.hasEffect(SE_MobEffect.DEAFENING.get())) {
-		return sound.getLocation().equals(new ResourceLocation(Status_Effects.MODID, "ringing_long")) ? 1F : 0.2F;
+		if(Minecraft.getInstance().level != null && Minecraft.getInstance().player.hasEffect(StatusEffectsMobEffect.DEAFENING.get())) {
+		return sound.getLocation().equals(new ResourceLocation(StatusEffects.MODID, "ringing_long")) ? 1F : 0.2F;
 		}
 		return 1F;
 	}
 
 	@Inject(method = "calculateVolume*", at = @At("RETURN"), cancellable = true)
 	private void SE_calculateTickableSoundVolume(SoundInstance sound, CallbackInfoReturnable<Float> cir) {
-		if (Minecraft.getInstance().level != null && Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(SE_MobEffect.DEAFENING.get())) {
+		if (Minecraft.getInstance().level != null && Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(StatusEffectsMobEffect.DEAFENING.get())) {
 			cir.setReturnValue(0.1F);
 		}
 	}

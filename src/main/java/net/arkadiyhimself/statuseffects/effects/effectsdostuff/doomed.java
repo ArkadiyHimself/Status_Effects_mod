@@ -1,29 +1,22 @@
 package net.arkadiyhimself.statuseffects.effects.effectsdostuff;
 
-import net.arkadiyhimself.statuseffects.Status_Effects;
-import net.arkadiyhimself.statuseffects.networking.Messages;
-import net.arkadiyhimself.statuseffects.networking.packets.UndoomedSoundS2CPacket;
-import net.arkadiyhimself.statuseffects.particles.SE_Particles;
-import net.arkadiyhimself.statuseffects.sound.SE_Sounds;
+import net.arkadiyhimself.statuseffects.StatusEffects;
+import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
+import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.Supplier;
 
 public class doomed extends MobEffect {
-    protected static final ResourceLocation SWARMING_SOULS = new ResourceLocation(Status_Effects.MODID, "textures/misc/swarming_souls.png");
+    protected static final ResourceLocation SWARMING_SOULS = new ResourceLocation(StatusEffects.MODID, "textures/misc/swarming_souls.png");
 
     double x;
     double y;
@@ -37,11 +30,11 @@ public class doomed extends MobEffect {
     int soulcooldown = 20;
 
     ArrayList<SoundEvent> whispers = new ArrayList<>(){{
-        add(SE_Sounds.WHISPER1.get());
-        add(SE_Sounds.WHISPER2.get());
-        add(SE_Sounds.WHISPER3.get());
-        add(SE_Sounds.WHISPER4.get());
-        add(SE_Sounds.WHISPER5.get());
+        add(StatusEffectsSounds.WHISPER1.get());
+        add(StatusEffectsSounds.WHISPER2.get());
+        add(StatusEffectsSounds.WHISPER3.get());
+        add(StatusEffectsSounds.WHISPER4.get());
+        add(StatusEffectsSounds.WHISPER5.get());
     }};
 
 
@@ -77,7 +70,7 @@ public class doomed extends MobEffect {
             boolean negativeZ = random.nextBoolean();
             z = negativeZ ? z * (-1) : z;
             // in the end, the area in which soul particles can spawn looks like side of a cylinder
-            Minecraft.getInstance().level.addParticle(SE_Particles.DOOMED_SOUL.get(), true,
+            Minecraft.getInstance().level.addParticle(StatusEffectsParticles.DOOMED_SOUL.get(), true,
                     pLivingEntity.getX() + x, pLivingEntity.getY() + y, pLivingEntity.getZ() + z,
                     dx.get() * 2.6, dy.get() * 0.2 + 0.1, dz.get() * 2.6);
         }
@@ -90,7 +83,7 @@ public class doomed extends MobEffect {
         }
 
         if (doplaysound && pLivingEntity == Minecraft.getInstance().player) {
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.UNDOOMED.get(), 1F, 1F));
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.UNDOOMED.get(), 1F, 1F));
         }
 
         super.applyEffectTick(pLivingEntity, pAmplifier);
