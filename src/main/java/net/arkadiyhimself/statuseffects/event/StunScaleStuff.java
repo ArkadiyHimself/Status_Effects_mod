@@ -8,6 +8,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -20,7 +21,6 @@ public class StunScaleStuff {
     @SubscribeEvent
     public static void stunPointsDecay(LivingEvent.LivingTickEvent event) {
         StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
-//        event.getEntity().getCapability(StunScaleAttacher.STUN_POINTS_CAPABILITY).ifPresent(stunScale -> {
             stunScale.subDecayDelay(1, true);
             if (stunScale.getDecayDelay() == 0) {
                 stunScale.subStunPoints(1, true);
@@ -28,21 +28,36 @@ public class StunScaleStuff {
         });
     }
     @SubscribeEvent
+    public static void stunApplied(MobEffectEvent.Added event) {
+        if(event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
+            StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
+                stunScale.setStunned(true, true);
+            });
+        }
+    }
+    @SubscribeEvent
+    public static void stunEnded(MobEffectEvent.Remove event) {
+        if(event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
+            StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
+                stunScale.setStunned(false, true);
+            });
+        }
+    }
+    @SubscribeEvent
     public static void pointsOnHit(LivingDamageEvent event) {
-        StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
-//        event.getEntity().getCapability(StunScaleAttacher.STUN_POINTS_CAPABILITY).ifPresent(stunScale -> {
-            if (event.getAmount() > 0) {
-                //todo: not from Nyfaria
-                //todo: you only need to sync on the final change
-                //todo: otherwise you can flood the network
-                stunScale.addStunPoints(50, false);
-                stunScale.setDecayDelay(50, true);
-            }
-            if(stunScale.getStunPoints() == stunScale.getMaxStunPoints()) {
-                stunScale.setStunPoints(0, false);
-                stunScale.setDecayDelay(0, true);
-                event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), 50));
-            }
-        });
+        if (!event.getEntity().hasEffect(StatusEffectsMobEffect.STUN.get())) {
+            StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
+                if (event.getAmount() > 0) {
+                    stunScale.addStunPoints(50, false);
+                    stunScale.setDecayDelay(50, true);
+                }
+                if (stunScale.getStunPoints() == stunScale.getMaxStunPoints()) {
+                    stunScale.setStunPoints(0, false);
+                    stunScale.setDecayDelay(0, true);
+                    int duration = stunScale.getDefaultStunDurationFromHits();
+                    event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), duration));
+                }
+            });
+        }
     }
 }

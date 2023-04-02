@@ -1,5 +1,6 @@
 package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
+import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class Stunning extends MobEffect {
 
     boolean returnAI = false;
+    int currentDuration;
 
     public Stunning() {
         super(MobEffectCategory.HARMFUL, 13859964);
@@ -21,18 +23,25 @@ public class Stunning extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity p_19467_, int p_19468_) {
-        if (returnAI && p_19467_ instanceof Mob mob) {
+    public void applyEffectTick(@NotNull LivingEntity pLivingEntity, int pAmplifier) {
+        if (returnAI && pLivingEntity instanceof Mob mob) {
             for (Goal.Flag flag : Goal.Flag.values()) {
                 mob.goalSelector.enableControlFlag(flag);
                 mob.targetSelector.enableControlFlag(flag);
             }
         }
-        super.applyEffectTick(p_19467_, p_19468_);
+        StunScaleAttacher.getStunScale(pLivingEntity).ifPresent(stunScale -> {
+            stunScale.setCurrentDuration(currentDuration, true);
+            if (returnAI) {
+                stunScale.setStunned(false, true);
+            }
+        });
+        super.applyEffectTick(pLivingEntity, pAmplifier);
     }
     @Override
-    public boolean isDurationEffectTick(int pDuration, int p_19456_) {
+    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
         returnAI = pDuration < 2;
+        currentDuration = pDuration;
         return true;
     }
 }

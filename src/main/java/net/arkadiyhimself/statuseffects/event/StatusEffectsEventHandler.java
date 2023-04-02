@@ -1,6 +1,7 @@
 package net.arkadiyhimself.statuseffects.event;
 
 import net.arkadiyhimself.statuseffects.StatusEffects;
+import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
 import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
@@ -138,17 +139,22 @@ public class StatusEffectsEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
     static void effectWasApplied(MobEffectEvent.Added event) {
         if (event.getEffectInstance().getEffect() == StatusEffectsMobEffect.DOOMED.get() && event.getEntity() instanceof Player) {
-//            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.DOOMED.get(), 1.0F, 1.0F));
             Entity entity = event.getEntity();
             NetworkHandler.sentToPlayer(new DoomedSoundS2CPacket(), (ServerPlayer) entity);
         }
         if (event.getEntity() instanceof Warden && event.getEffectInstance().getEffect() == StatusEffectsMobEffect.DISARM.get()) {
             SonicBoom.setCooldown(event.getEntity(), 0);
         }
-        if (event.getEntity() instanceof Mob mob && event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
-            for (Goal.Flag flag : Goal.Flag.values()) {
-                mob.goalSelector.disableControlFlag(flag);
-                mob.targetSelector.disableControlFlag(flag);
+        if (event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
+            StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
+                int duration = event.getEffectInstance().getDuration();
+                stunScale.setStunDurationInitial(duration,true);
+            });
+            if(event.getEntity() instanceof Mob mob) {
+                for (Goal.Flag flag : Goal.Flag.values()) {
+                    mob.goalSelector.disableControlFlag(flag);
+                    mob.targetSelector.disableControlFlag(flag);
+                }
             }
         }
     }

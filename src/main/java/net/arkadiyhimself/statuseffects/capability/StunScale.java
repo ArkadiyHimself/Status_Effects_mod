@@ -3,6 +3,7 @@ package net.arkadiyhimself.statuseffects.capability;
 import dev._100media.capabilitysyncer.core.LivingEntityCapability;
 import dev._100media.capabilitysyncer.network.EntityCapabilityStatusPacket;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
+import net.arkadiyhimself.statuseffects.attributes.StatusEffectsAttributes;
 import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -27,6 +28,9 @@ public class StunScale extends LivingEntityCapability {
     public CompoundTag serializeNBT(boolean savingToDisk) {
         CompoundTag tag = new CompoundTag();
         tag.putInt("stunPoints", this.stunPoints);
+        tag.putInt("initDuration", this.stunDurationInitial);
+        tag.putInt("currentDuration", this.currentDuration);
+        tag.putBoolean("isStunned", this.isStunned);
         return tag;
     }
     @Override
@@ -34,7 +38,25 @@ public class StunScale extends LivingEntityCapability {
         if (nbt.contains("stunPoints", Tag.TAG_INT)) {
             this.stunPoints = nbt.getInt("stunPoints");
         } else {
-            this.stunPoints = 0;
+            this.stunPoints = this.minStunPoints;
+        }
+
+        if (nbt.contains("initDuration", Tag.TAG_INT)) {
+            this.stunDurationInitial = nbt.getInt("initDuration");
+        } else {
+            this.stunDurationInitial = 1;
+        }
+
+        if (nbt.contains("currentDuration", Tag.TAG_INT)) {
+            this.currentDuration = nbt.getInt("currentDuration");
+        } else {
+            this.currentDuration = 0;
+        }
+
+        if (nbt.contains("isStunned")) {
+            this.isStunned = nbt.getBoolean("isStunned");
+        } else {
+            this.isStunned = false;
         }
     }
 
@@ -45,7 +67,10 @@ public class StunScale extends LivingEntityCapability {
     private int decayDelay; // the delay before stun points start decaying after each hit
     private final int defaultPointsFromHit = 50; // the default amount of points gotten from being hit
     private final int defaultDecayDelay = 50; // the default delay before stun points start decaying after each hit
-
+    private final int defaultStunDurationFromHits = 50; // stun duration from being stunned by being hit
+    private int stunDurationInitial; // stun duration from being stunned in any way
+    private int currentDuration; // current duration
+    boolean isStunned;
 
     // getters, setters, etc.
 
@@ -54,10 +79,10 @@ public class StunScale extends LivingEntityCapability {
         return stunPoints;
     }
     public void setStunPoints(int amount, boolean sync) {
-        if (this.stunPoints + amount > this.maxStunPoints) {
+        if (amount >= this.maxStunPoints) {
             this.stunPoints = maxStunPoints;
         } else {
-            this.stunPoints = Math.max(minStunPoints, this.stunPoints + amount);
+            this.stunPoints = Math.max(minStunPoints, amount);
         }
         if (sync) {
             this.updateTracking();
@@ -121,5 +146,43 @@ public class StunScale extends LivingEntityCapability {
     }
     public int getDefaultPointsFromHit() {
         return defaultPointsFromHit;
+    }
+
+    // default stun duration form
+    public int getDefaultStunDurationFromHits() {
+        return defaultStunDurationFromHits;
+    }
+
+    // stun duration
+    public int getStunDurationInitial() {
+        return stunDurationInitial;
+    }
+    public void setStunDurationInitial(int duration, boolean sync) {
+        this.stunDurationInitial = duration;
+        if (sync) {
+            this.updateTracking();
+        }
+    }
+
+    // current stun duration
+    public int getCurrentDuration() {
+        return currentDuration;
+    }
+    public void setCurrentDuration(int duration, boolean sync) {
+        this.currentDuration = duration;
+        if (sync) {
+            this.updateTracking();
+        }
+    }
+
+    // is entity stunned
+    public void setStunned(boolean stunned, boolean sync) {
+        isStunned = stunned;
+        if (sync) {
+            this.updateTracking();
+        }
+    }
+    public boolean getStunned() {
+        return this.isStunned;
     }
 }

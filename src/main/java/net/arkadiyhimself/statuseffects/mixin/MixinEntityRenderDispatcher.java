@@ -1,7 +1,7 @@
 package net.arkadiyhimself.statuseffects.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.arkadiyhimself.statuseffects.mobeffects.StunRenderer;
+import net.arkadiyhimself.statuseffects.client.StunRender.StunRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
@@ -21,7 +21,7 @@ public abstract class MixinEntityRenderDispatcher {
                     shift = At.Shift.AFTER
             )
     )
-    private void SE_renderStunBar(Entity pEntity, double pX, double pY, double pZ, float pRotationYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight, CallbackInfo ci) {
+    private void StatusEffectsRenderStunBar(Entity pEntity, double pX, double pY, double pZ, float pRotationYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight, CallbackInfo ci) {
         StunRenderer.renderStunBar(pEntity, pMatrixStack, pBuffer, cameraOrientation());
     }
 }

@@ -17,6 +17,5 @@ public class StatusEffectsAttributes {
 
     public static final RegistryObject<Attribute> STUN_POINTS = ATTRIBUTE.register("stun_points",
             () -> new RangedAttribute("attribute.name.generic.max_stun",
-                    0.0D, 0.0D, 1000.0D).setSyncable(true));
-
+                    200.0D, 0.0D, 1000.0D).setSyncable(true));
 }
