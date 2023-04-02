@@ -1,10 +1,10 @@
-package net.arkadiyhimself.statuseffects.effects;
+package net.arkadiyhimself.statuseffects.world.effects;
 
 import net.arkadiyhimself.statuseffects.StatusEffects;
-import net.arkadiyhimself.statuseffects.effects.effectsdostuff.deafening;
-import net.arkadiyhimself.statuseffects.effects.effectsdostuff.freeze;
-import net.arkadiyhimself.statuseffects.effects.effectsdostuff.doomed;
-import net.arkadiyhimself.statuseffects.effects.effectsdostuff.stunning;
+import net.arkadiyhimself.statuseffects.world.effects.effectsdostuff.deafening;
+import net.arkadiyhimself.statuseffects.world.effects.effectsdostuff.freeze;
+import net.arkadiyhimself.statuseffects.world.effects.effectsdostuff.doomed;
+import net.arkadiyhimself.statuseffects.world.effects.effectsdostuff.stunning;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;

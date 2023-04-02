@@ -12,7 +12,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class Messages {
-    private static SimpleChannel packetInstance;
+    public static SimpleChannel packetInstance;
     private static int packetID = 0;
     private static int id() {
         return packetID++;

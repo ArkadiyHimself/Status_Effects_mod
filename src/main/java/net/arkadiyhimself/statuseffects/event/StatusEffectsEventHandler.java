@@ -1,11 +1,10 @@
 package net.arkadiyhimself.statuseffects.event;
 
 import net.arkadiyhimself.statuseffects.StatusEffects;
-import net.arkadiyhimself.statuseffects.effects.StatusEffectsMobEffect;
-import net.arkadiyhimself.statuseffects.interfaces.StunScaleInterface;
 import net.arkadiyhimself.statuseffects.networking.Messages;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
+import net.arkadiyhimself.statuseffects.world.effects.StatusEffectsMobEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -40,7 +39,6 @@ public class StatusEffectsEventHandler {
 
     @SubscribeEvent
     public static void damageEffectsApplying(LivingDamageEvent event) {
-        ((StunScaleInterface) event.getEntity()).addStunPoints(50);
         if (event.getSource() == DamageSource.FALL) {
             int i = (int) Math.ceil(event.getAmount() * 5);
             event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(i, 150)));

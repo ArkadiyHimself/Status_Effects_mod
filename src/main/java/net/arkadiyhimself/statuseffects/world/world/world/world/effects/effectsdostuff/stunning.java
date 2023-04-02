@@ -1,6 +1,5 @@
-package net.arkadiyhimself.statuseffects.effects.effectsdostuff;
+package net.arkadiyhimself.statuseffects.world.effects.effectsdostuff;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,7 +32,7 @@ public class stunning extends MobEffect {
     }
     @Override
     public boolean isDurationEffectTick(int pDuration, int p_19456_) {
-        returnAI = pDuration < 5;
+        returnAI = pDuration < 2;
         return true;
     }
 }

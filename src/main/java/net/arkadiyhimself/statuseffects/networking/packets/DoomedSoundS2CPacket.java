@@ -9,12 +9,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class DoomedSoundS2CPacket {
-    public DoomedSoundS2CPacket() {
-
-    }
-    public DoomedSoundS2CPacket(FriendlyByteBuf buf) {
-
-    }
+    public DoomedSoundS2CPacket() {}
+    public DoomedSoundS2CPacket(FriendlyByteBuf buf) {}
     public void toBytes(FriendlyByteBuf buf) {
 
     }

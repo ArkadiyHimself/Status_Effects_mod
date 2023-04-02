@@ -1,7 +1,7 @@
 package net.arkadiyhimself.statuseffects.mixin;
 
 import net.arkadiyhimself.statuseffects.StatusEffects;
-import net.arkadiyhimself.statuseffects.effects.StatusEffectsMobEffect;
+import net.arkadiyhimself.statuseffects.world.effects.StatusEffectsMobEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.resources.ResourceLocation;

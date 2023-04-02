@@ -1,12 +1,10 @@
-package net.arkadiyhimself.statuseffects.effects.effectsdostuff;
+package net.arkadiyhimself.statuseffects.world.effects.effectsdostuff;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Blaze;
 
 public class freeze extends MobEffect {
     public freeze(MobEffectCategory p_19451_, int p_19452_) {

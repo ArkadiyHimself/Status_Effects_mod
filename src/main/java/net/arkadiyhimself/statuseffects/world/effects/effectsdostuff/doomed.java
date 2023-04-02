@@ -1,4 +1,4 @@
-package net.arkadiyhimself.statuseffects.effects.effectsdostuff;
+package net.arkadiyhimself.statuseffects.world.effects.effectsdostuff;
 
 import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;

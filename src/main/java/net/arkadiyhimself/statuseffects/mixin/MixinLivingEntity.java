@@ -1,6 +1,7 @@
 package net.arkadiyhimself.statuseffects.mixin;
 
-import net.arkadiyhimself.statuseffects.effects.StatusEffectsMobEffect;
+
+import net.arkadiyhimself.statuseffects.world.effects.StatusEffectsMobEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
