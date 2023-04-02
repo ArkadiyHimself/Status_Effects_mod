@@ -3,8 +3,7 @@ package net.arkadiyhimself.statuseffects.capability;
 import dev._100media.capabilitysyncer.core.LivingEntityCapability;
 import dev._100media.capabilitysyncer.network.EntityCapabilityStatusPacket;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
-import net.arkadiyhimself.statuseffects.StatusEffects;
-import net.arkadiyhimself.statuseffects.networking.Messages;
+import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +21,7 @@ public class StunScale extends LivingEntityCapability {
     }
     @Override
     public SimpleChannel getNetworkChannel() {
-        return Messages.packetInstance;
+        return NetworkHandler.INSTANCE;
     }
     @Override
     public CompoundTag serializeNBT(boolean savingToDisk) {

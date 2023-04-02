@@ -1,9 +1,9 @@
-package net.arkadiyhimself.statuseffects.world.effects;
+package net.arkadiyhimself.statuseffects.mobeffects;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
-import net.arkadiyhimself.statuseffects.world.StunRender.StunBar;
+import net.arkadiyhimself.statuseffects.client.StunRender.StunBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +32,8 @@ public class StunRenderer {
         poseStack.scale(-globalScale, -globalScale, -globalScale);
 
         VertexConsumer stunBar = buffers.getBuffer(StunBar.BAR_TEXTURE_TYPE);
-        living.getCapability(StunScaleAttacher.STUN_POINTS_CAPABILITY).ifPresent(stunScale -> {
+        StunScaleAttacher.getStunScale(living).ifPresent(stunScale -> {
+//        living.getCapability(StunScaleAttacher.STUN_POINTS_CAPABILITY).ifPresent(stunScale -> {
             if(stunScale.getStunPoints() > 0) {
                 stunBar.vertex(poseStack.last().pose(), -32, 0, 0.001F).color(r, g, b, 255).uv(0.0F, 0.0F).uv2(light).endVertex();
                 stunBar.vertex(poseStack.last().pose(), -32, 8, 0.001F).color(r, g, b, 255).uv(0.0F, 0.5F).uv2(light).endVertex();

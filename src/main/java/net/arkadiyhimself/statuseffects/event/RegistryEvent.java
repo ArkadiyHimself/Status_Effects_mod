@@ -1,6 +1,6 @@
 package net.arkadiyhimself.statuseffects.event;
 
-import net.arkadiyhimself.statuseffects.Attributes.StatusEffectsAttributes;
+import net.arkadiyhimself.statuseffects.attributes.StatusEffectsAttributes;
 import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
 import net.arkadiyhimself.statuseffects.particles.custom.DoomedParticles;

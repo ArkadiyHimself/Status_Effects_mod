@@ -1,4 +1,4 @@
-package net.arkadiyhimself.statuseffects.world.effects.effectsdostuff;
+package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
 import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class doomed extends MobEffect {
+public class Doomed extends MobEffect {
     protected static final ResourceLocation SWARMING_SOULS = new ResourceLocation(StatusEffects.MODID, "textures/misc/swarming_souls.png");
 
     double x;
@@ -38,7 +38,7 @@ public class doomed extends MobEffect {
     }};
 
 
-    public doomed(MobEffectCategory mobEffectCategory, int p_19452_) {
+    public Doomed(MobEffectCategory mobEffectCategory, int p_19452_) {
         super(mobEffectCategory, p_19452_);
     }
 

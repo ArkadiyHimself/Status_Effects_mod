@@ -9,8 +9,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import org.stringtemplate.v4.ST;
 
 import javax.annotation.Nullable;
 
@@ -21,11 +19,11 @@ public class StunScaleAttacher extends CapabilityAttacher {
 
     @SuppressWarnings("ConstantConditions")
     @Nullable
-    public static StunScale getLivingEntityCapabilityUnwrap(LivingEntity entity) {
-        return getLivingEntityCapability(entity).orElse(null);
+    public static StunScale getStunScaleUnwrap(LivingEntity entity) {
+        return getStunScale(entity).orElse(null);
     }
 
-    public static LazyOptional<StunScale> getLivingEntityCapability(LivingEntity entity) {
+    public static LazyOptional<StunScale> getStunScale(LivingEntity entity) {
         return entity.getCapability(STUN_POINTS_CAPABILITY);
     }
     private static void attacher(AttachCapabilitiesEvent<Entity> event, LivingEntity entity) {
@@ -33,7 +31,7 @@ public class StunScaleAttacher extends CapabilityAttacher {
     }
     public static void register() {
         CapabilityAttacher.registerCapability(CAPABILITY_CLASS);
-        CapabilityAttacher.registerEntityAttacher(LivingEntity.class, StunScaleAttacher::attacher, StunScaleAttacher::getLivingEntityCapability, true);
+        CapabilityAttacher.registerEntityAttacher(LivingEntity.class, StunScaleAttacher::attacher, StunScaleAttacher::getStunScale, true);
     }
 
 }
