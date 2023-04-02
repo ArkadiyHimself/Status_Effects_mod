@@ -1,4 +1,4 @@
-package net.arkadiyhimself.statuseffects.world.effects.effectsdostuff;
+package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -8,15 +8,15 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import org.jetbrains.annotations.NotNull;
 
 
-public class stunning extends MobEffect {
+public class Stunning extends MobEffect {
 
     boolean returnAI = false;
 
-    public stunning() {
+    public Stunning() {
         super(MobEffectCategory.HARMFUL, 13859964);
 
     }
-    public stunning(MobEffectCategory p_19451_, int p_19452_) {
+    public Stunning(MobEffectCategory p_19451_, int p_19452_) {
         super(p_19451_, p_19452_);
     }
 

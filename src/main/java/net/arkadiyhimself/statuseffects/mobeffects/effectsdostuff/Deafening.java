@@ -1,4 +1,4 @@
-package net.arkadiyhimself.statuseffects.world.effects.effectsdostuff;
+package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -8,8 +8,8 @@ import net.minecraftforge.fml.common.Mod;
 
 
 @Mod.EventBusSubscriber({Dist.CLIENT})
-public class deafening extends MobEffect {
-    public deafening(MobEffectCategory p_19451_, int p_19452_) {
+public class Deafening extends MobEffect {
+    public Deafening(MobEffectCategory p_19451_, int p_19452_) {
         super(p_19451_, p_19452_);
     }
 

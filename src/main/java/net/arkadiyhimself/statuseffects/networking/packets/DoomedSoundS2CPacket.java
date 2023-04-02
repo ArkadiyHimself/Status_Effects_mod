@@ -1,26 +1,34 @@
 package net.arkadiyhimself.statuseffects.networking.packets;
 
+import dev._100media.capabilitysyncer.network.IPacket;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.function.Supplier;
 
-public class DoomedSoundS2CPacket {
-    public DoomedSoundS2CPacket() {}
-    public DoomedSoundS2CPacket(FriendlyByteBuf buf) {}
-    public void toBytes(FriendlyByteBuf buf) {
+public record DoomedSoundS2CPacket() implements IPacket {
 
-    }
-    public boolean handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context context = supplier.get();
+    public void handle(NetworkEvent.Context context) {
         context.enqueueWork(() -> {
             Minecraft.getInstance().getSoundManager().
                     play(SimpleSoundInstance.forUI(StatusEffectsSounds.DOOMED.get(), 1.0F, 0.4F));
         });
         context.setPacketHandled(true);
-        return true;
+    }
+
+    @Override
+    public void write(FriendlyByteBuf packetBuf) {
+
+    }
+    public static DoomedSoundS2CPacket read(FriendlyByteBuf packetBuf) {
+        return new DoomedSoundS2CPacket();
+    }
+    public static void register(SimpleChannel channel, int id) {
+        IPacket.register(channel, id, NetworkDirection.PLAY_TO_SERVER, DoomedSoundS2CPacket.class, DoomedSoundS2CPacket::read);
     }
 }

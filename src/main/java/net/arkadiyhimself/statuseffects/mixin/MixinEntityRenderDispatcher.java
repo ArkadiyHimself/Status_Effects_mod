@@ -1,11 +1,10 @@
 package net.arkadiyhimself.statuseffects.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.arkadiyhimself.statuseffects.world.effects.StunRenderer;
+import net.arkadiyhimself.statuseffects.mobeffects.StunRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

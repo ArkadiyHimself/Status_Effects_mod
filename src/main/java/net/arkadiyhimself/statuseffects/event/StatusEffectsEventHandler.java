@@ -1,10 +1,10 @@
 package net.arkadiyhimself.statuseffects.event;
 
 import net.arkadiyhimself.statuseffects.StatusEffects;
-import net.arkadiyhimself.statuseffects.networking.Messages;
+import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
-import net.arkadiyhimself.statuseffects.world.effects.StatusEffectsMobEffect;
+import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -49,7 +49,7 @@ public class StatusEffectsEventHandler {
             if (event.getEntity() instanceof Player) {
 //                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.RINGING_LONG.get(), 1.0F, 5.0F));
                 Entity entity = event.getEntity();
-                Messages.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
+                NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
             }
         }
 
@@ -61,7 +61,7 @@ public class StatusEffectsEventHandler {
                 if (event.getEntity() instanceof Player) {
                     Entity entity = event.getEntity();
 //                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.RINGING_LONG.get(), 1.0F, 5.0F));
-                    Messages.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
+                    NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
                 }
             }
         }
@@ -140,7 +140,7 @@ public class StatusEffectsEventHandler {
         if (event.getEffectInstance().getEffect() == StatusEffectsMobEffect.DOOMED.get() && event.getEntity() instanceof Player) {
 //            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.DOOMED.get(), 1.0F, 1.0F));
             Entity entity = event.getEntity();
-            Messages.sentToPlayer(new DoomedSoundS2CPacket(), (ServerPlayer) entity);
+            NetworkHandler.sentToPlayer(new DoomedSoundS2CPacket(), (ServerPlayer) entity);
         }
         if (event.getEntity() instanceof Warden && event.getEffectInstance().getEffect() == StatusEffectsMobEffect.DISARM.get()) {
             SonicBoom.setCooldown(event.getEntity(), 0);

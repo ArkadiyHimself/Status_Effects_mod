@@ -1,4 +1,4 @@
-package net.arkadiyhimself.statuseffects.world.StunRender;
+package net.arkadiyhimself.statuseffects.client.StunRender;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.arkadiyhimself.statuseffects.StatusEffects;

@@ -1,14 +1,14 @@
 package net.arkadiyhimself.statuseffects;
 
 import com.mojang.logging.LogUtils;
-import net.arkadiyhimself.statuseffects.Attributes.StatusEffectsAttributes;
+import net.arkadiyhimself.statuseffects.attributes.StatusEffectsAttributes;
 import net.arkadiyhimself.statuseffects.blocks.StatusEffectsBlocks;
 import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
 import net.arkadiyhimself.statuseffects.items.StatusEffectsModItem;
-import net.arkadiyhimself.statuseffects.networking.Messages;
+import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
-import net.arkadiyhimself.statuseffects.world.effects.StatusEffectsMobEffect;
+import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -40,10 +40,11 @@ public class StatusEffects
         MinecraftForge.EVENT_BUS.register(this);
 
         modEventBus.addListener(this::addCreative);
+        StunScaleAttacher.register();
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        Messages.register();
+        NetworkHandler.register();
     }
 
     private void addCreative(CreativeModeTabEvent.BuildContents event)
