@@ -29,6 +29,6 @@ public record DoomedSoundS2CPacket() implements IPacket {
         return new DoomedSoundS2CPacket();
     }
     public static void register(SimpleChannel channel, int id) {
-        IPacket.register(channel, id, NetworkDirection.PLAY_TO_SERVER, DoomedSoundS2CPacket.class, DoomedSoundS2CPacket::read);
+        IPacket.register(channel, id, NetworkDirection.PLAY_TO_CLIENT, DoomedSoundS2CPacket.class, DoomedSoundS2CPacket::read);
     }
 }

@@ -3,5 +3,13 @@
   "effect.statuseffects.deafening": "§1Deaf",
   "effect.statuseffects.freeze": "§bFrozen",
   "effect.statuseffects.doomed": "§4§lDOOMED",
-  "effect.statuseffects.disarm": "§7Disarmed"
+  "effect.statuseffects.disarm": "§7Disarmed",
+
+  "gui.statuseffects.stun_bar": "Stun Bar",
+
+  "subtitles.whisper1" : "join us...",
+  "subtitles.whisper2" : "it is your chance!",
+  "subtitles.whisper3" : "many have fallen to us",
+  "subtitles.whisper4" : "just give up...",
+  "subtitles.whisper5" : "become one of us!"
 }

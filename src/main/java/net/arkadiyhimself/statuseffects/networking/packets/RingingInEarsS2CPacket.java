@@ -29,6 +29,6 @@ public record RingingInEarsS2CPacket() implements IPacket {
         return new RingingInEarsS2CPacket();
     }
     public static void register(SimpleChannel channel, int id) {
-        IPacket.register(channel, id, NetworkDirection.PLAY_TO_SERVER, RingingInEarsS2CPacket.class, RingingInEarsS2CPacket::read);
+        IPacket.register(channel, id, NetworkDirection.PLAY_TO_CLIENT, RingingInEarsS2CPacket.class, RingingInEarsS2CPacket::read);
     }
 }

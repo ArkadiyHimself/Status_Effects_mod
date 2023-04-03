@@ -23,7 +23,6 @@ public class StatusEffectsSounds {
             registerSoundEvent("ringing_long");
     public static final RegistryObject<SoundEvent> DOOMED =
             registerSoundEvent("doomed");
-
     public static final RegistryObject<SoundEvent> UNDOOMED =
             registerSoundEvent("undoomed");
 
@@ -41,7 +40,8 @@ public class StatusEffectsSounds {
 
     public static final RegistryObject<SoundEvent> WHISPER5 =
             registerSoundEvent("whisper5");
-
+    public static final RegistryObject<SoundEvent> SWORD_CLASH1 =
+            registerSoundEvent("sword_clashing/sword_clashing_1");
 
 
     public static void register(IEventBus eventBus) {

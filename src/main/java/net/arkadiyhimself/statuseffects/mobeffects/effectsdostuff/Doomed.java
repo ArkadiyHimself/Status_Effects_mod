@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -56,6 +57,8 @@ public class Doomed extends MobEffect {
         dospawnsoul = soulcooldown == 0;
 
         if (dospawnsoul) {
+            float radius = pLivingEntity.getBbWidth();
+            float height = pLivingEntity.getBbHeight();
             soulcooldown = random.nextInt(6, 8);
             // using supplier to get entity's movement (no idea whether it even matters lmao)
             Supplier<Double> dx = () -> pLivingEntity.getDeltaMovement().x;
@@ -63,9 +66,9 @@ public class Doomed extends MobEffect {
             Supplier<Double> dz = () -> pLivingEntity.getDeltaMovement().z;
             // here im using circular function for X and Z (X**2 + Z**2 = R**2) coordinates to make a horizontal circle
             // Y variants are just a vertical line
-            y = random.nextDouble(0.3, 1.5);
-            x = random.nextDouble(-0.5, 0.5);
-            z = Math.sqrt(0.25 - x * x);
+            y = random.nextDouble(0, height * 0.8);
+            x = random.nextDouble(-radius, radius);
+            z = Math.sqrt(radius * radius - x * x);
             // here game randomly decides to make Z coordinate negative
             boolean negativeZ = random.nextBoolean();
             z = negativeZ ? z * (-1) : z;

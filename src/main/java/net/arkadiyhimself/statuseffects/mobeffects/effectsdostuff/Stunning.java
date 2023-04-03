@@ -31,10 +31,11 @@ public class Stunning extends MobEffect {
             }
         }
         StunScaleAttacher.getStunScale(pLivingEntity).ifPresent(stunScale -> {
-            stunScale.setCurrentDuration(currentDuration, true);
+            stunScale.setCurrentDuration(currentDuration);
             if (returnAI) {
-                stunScale.setStunned(false, true);
+                stunScale.setStunned(false);
             }
+            stunScale.updateData();
         });
         super.applyEffectTick(pLivingEntity, pAmplifier);
     }

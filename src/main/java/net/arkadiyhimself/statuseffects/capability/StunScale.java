@@ -3,7 +3,6 @@ package net.arkadiyhimself.statuseffects.capability;
 import dev._100media.capabilitysyncer.core.LivingEntityCapability;
 import dev._100media.capabilitysyncer.network.EntityCapabilityStatusPacket;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
-import net.arkadiyhimself.statuseffects.attributes.StatusEffectsAttributes;
 import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -11,6 +10,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class StunScale extends LivingEntityCapability {
+
+    // update data
+    public void updateData() {
+        this.updateTracking();
+    }
 
     // SyncedCapability related stuff
     public StunScale(LivingEntity entity) {
@@ -78,27 +82,18 @@ public class StunScale extends LivingEntityCapability {
     public int getStunPoints() {
         return stunPoints;
     }
-    public void setStunPoints(int amount, boolean sync) {
+    public void setStunPoints(int amount) {
         if (amount >= this.maxStunPoints) {
             this.stunPoints = maxStunPoints;
         } else {
             this.stunPoints = Math.max(minStunPoints, amount);
         }
-        if (sync) {
-            this.updateTracking();
-        }
     } // in this setter I made sure that entity's current stun points won't go above maximum nor below minimum
-    public void addStunPoints(int amount, boolean sync) {
+    public void addStunPoints(int amount) {
         this.stunPoints = Math.min(maxStunPoints, this.stunPoints + amount);
-        if (sync) {
-            this.updateTracking();
-        }
     }
-    public void subStunPoints(int amount, boolean sync) {
+    public void subStunPoints(int amount) {
         this.stunPoints = Math.max(minStunPoints, this.stunPoints - amount);
-        if (sync) {
-            this.updateTracking();
-        }
     }
 
     // minimum stun points, don't see a reason adding anything else aside of getter
@@ -110,34 +105,22 @@ public class StunScale extends LivingEntityCapability {
     public int getMaxStunPoints() {
         return maxStunPoints;
     }
-    public void setMaxStunPoints(int amount, boolean sync) {
+    public void setMaxStunPoints(int amount) {
         this.maxStunPoints = amount;
-        if (sync) {
-            this.updateTracking();
-        }
     }
 
     // delay before decaying
     public int getDecayDelay() {
         return decayDelay;
     }
-    public void setDecayDelay(int amount, boolean sync) {
+    public void setDecayDelay(int amount) {
         this.decayDelay = amount;
-        if (sync) {
-            this.updateTracking();
-        }
     }
-    public void addDecayDelay(int amount, boolean sync) {
+    public void addDecayDelay(int amount) {
         this.decayDelay += amount;
-        if (sync) {
-            this.updateTracking();
-        }
     }
-    public void subDecayDelay(int amount, boolean sync) {
+    public void subDecayDelay(int amount) {
         this.decayDelay = Math.max(0, this.decayDelay - amount);
-        if (sync) {
-            this.updateTracking();
-        }
     }
 
     // default values, shouldn't be changed anyway
@@ -157,32 +140,23 @@ public class StunScale extends LivingEntityCapability {
     public int getStunDurationInitial() {
         return stunDurationInitial;
     }
-    public void setStunDurationInitial(int duration, boolean sync) {
+    public void setStunDurationInitial(int duration) {
         this.stunDurationInitial = duration;
-        if (sync) {
-            this.updateTracking();
-        }
     }
 
     // current stun duration
     public int getCurrentDuration() {
         return currentDuration;
     }
-    public void setCurrentDuration(int duration, boolean sync) {
+    public void setCurrentDuration(int duration) {
         this.currentDuration = duration;
-        if (sync) {
-            this.updateTracking();
-        }
     }
 
     // is entity stunned
-    public void setStunned(boolean stunned, boolean sync) {
+    public void setStunned(boolean stunned) {
         isStunned = stunned;
-        if (sync) {
-            this.updateTracking();
-        }
     }
-    public boolean getStunned() {
+    public boolean isStunned() {
         return this.isStunned;
     }
 }

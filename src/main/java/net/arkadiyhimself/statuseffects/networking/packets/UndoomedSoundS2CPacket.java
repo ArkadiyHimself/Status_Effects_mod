@@ -22,7 +22,7 @@ public record UndoomedSoundS2CPacket() implements IPacket {
         context.setPacketHandled(true);
     }
     public static void register(SimpleChannel channel, int id) {
-        IPacket.register(channel, id, NetworkDirection.PLAY_TO_SERVER, UndoomedSoundS2CPacket.class, UndoomedSoundS2CPacket::read);
+        IPacket.register(channel, id, NetworkDirection.PLAY_TO_CLIENT, UndoomedSoundS2CPacket.class, UndoomedSoundS2CPacket::read);
     }
     public static UndoomedSoundS2CPacket read(FriendlyByteBuf packetBuf) {
         return new UndoomedSoundS2CPacket();

@@ -9,10 +9,8 @@ import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,22 +31,28 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Mod.EventBusSubscriber(modid = StatusEffects.MODID)
 public class StatusEffectsEventHandler {
-
     @SubscribeEvent
     public static void damageEffectsApplying(LivingDamageEvent event) {
+        AtomicInteger prematureStun = new AtomicInteger();
+        // here I calculate the stun duration in cases entity had lots of stun points but took little damage from falling/explosion
+        StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
+            prematureStun.set((int) Math.ceil((stunScale.getStunPoints() / stunScale.getMaxStunPoints()) * stunScale.getDefaultStunDurationFromHits()));
+
+        });
+
         if (event.getSource() == DamageSource.FALL) {
             int i = (int) Math.ceil(event.getAmount() * 5);
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(i, 150)));
+            i = Math.max(i, prematureStun.get());
+            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(i, 150), 1, false, false, false));
         }
 
         if ("sonic_boom".equals(event.getSource().getMsgId())) {
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), 200));
+            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), 200, 1, false, false, false));
             if (event.getEntity() instanceof Player) {
-//                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.RINGING_LONG.get(), 1.0F, 5.0F));
                 Entity entity = event.getEntity();
                 NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
             }
@@ -56,12 +60,12 @@ public class StatusEffectsEventHandler {
 
         if (event.getSource().isExplosion()) {
             int i = (int) Math.ceil(event.getAmount() * 5);
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(i, 150)));
+            i = Math.max(i, prematureStun.get());
+            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(i, 150), 1, false, false, false));
             if (event.getAmount() > 4) {
                 event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), Math.min(i, 150) * 2));
                 if (event.getEntity() instanceof Player) {
                     Entity entity = event.getEntity();
-//                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SE_Sounds.RINGING_LONG.get(), 1.0F, 5.0F));
                     NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
                 }
             }
@@ -84,7 +88,6 @@ public class StatusEffectsEventHandler {
     @SubscribeEvent
     static void muteSounds(PlaySoundEvent event) {
         boolean exception = false;
-        Sound sound = Objects.requireNonNull(event.getSound()).getSound();
         if (event.getSound() instanceof SimpleSoundInstance) {
             exception = event.getName().equals("ringing_long") || event.getName().equals("entity.warden.sonic_boom")
                     || event.getName().equals("entity.generic.explode") || event.getName().equals("ui.toast.challenge_complete")
@@ -111,7 +114,7 @@ public class StatusEffectsEventHandler {
     static void disarmMobs(LivingAttackEvent event) {
         if ("mob".equals(event.getSource().getMsgId())) {
             DamageSource source = event.getSource();
-            Entity entity = ((EntityDamageSource) source).getEntity();
+            Entity entity = (source).getEntity();
             if (entity instanceof Mob mob) {
                 event.setCanceled(mob.hasEffect(StatusEffectsMobEffect.DISARM.get()) || mob.hasEffect(StatusEffectsMobEffect.STUN.get()));
             }
@@ -126,7 +129,6 @@ public class StatusEffectsEventHandler {
             ((LivingEntity) entity).addEffect(new MobEffectInstance(StatusEffectsMobEffect.FREEZE.get(), 30));
         }
     }
-
     @SubscribeEvent
     static void stunMouseInputs(InputEvent.InteractionKeyMappingTriggered event) {
         if (Minecraft.getInstance().level != null) {
@@ -148,7 +150,8 @@ public class StatusEffectsEventHandler {
         if (event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
             StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
                 int duration = event.getEffectInstance().getDuration();
-                stunScale.setStunDurationInitial(duration,true);
+                stunScale.setStunDurationInitial(duration);
+                stunScale.updateData();
             });
             if(event.getEntity() instanceof Mob mob) {
                 for (Goal.Flag flag : Goal.Flag.values()) {
