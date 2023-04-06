@@ -2,25 +2,29 @@ package net.arkadiyhimself.statuseffects.event;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.capability.StunScale;
 import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
+import net.arkadiyhimself.statuseffects.client.AboveEntititesRenderer.StunBarType;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
-import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.arkadiyhimself.statuseffects.sound.SwordClashSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -30,6 +34,7 @@ import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.joml.Quaternionf;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -59,7 +64,7 @@ public class StunScaleStuff {
     }};
     public static int changingRed = 128;
     public static boolean redUp;
-    public static final ResourceLocation STUN_BAR_GUI = new ResourceLocation(StatusEffects.MODID, "textures/gui/stun_bar_gui.png");
+    public static final ResourceLocation BAR_GUI = new ResourceLocation(StatusEffects.MODID, "textures/gui/statuseffects_bar_gui.png");
     @SubscribeEvent
     public static void registerCaps(RegisterCapabilitiesEvent event) {
         event.register(StunScale.class);
@@ -116,12 +121,25 @@ public class StunScaleStuff {
     @SubscribeEvent
     public static void stunApplied(MobEffectEvent.Added event) {
         if(event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
+
+            // updates data of StunScale capability
             StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
                 stunScale.setStunPoints(0);
                 stunScale.setDecayDelay(0);
                 stunScale.setStunned(true);
                 stunScale.updateData();
+                int duration = event.getEffectInstance().getDuration();
+                stunScale.setStunDurationInitial(duration);
+                stunScale.updateData();
             });
+
+            // disables AI of stunned mob
+            if(event.getEntity() instanceof Mob mob) {
+                for (Goal.Flag flag : Goal.Flag.values()) {
+                    mob.goalSelector.disableControlFlag(flag);
+                    mob.targetSelector.disableControlFlag(flag);
+                }
+            }
         }
     }
     @SubscribeEvent
@@ -131,6 +149,12 @@ public class StunScaleStuff {
                 stunScale.setStunned(false);
                 stunScale.updateData();
             });
+            if (event.getEntity() instanceof Mob mob) {
+                for (Goal.Flag flag : Goal.Flag.values()) {
+                    mob.goalSelector.enableControlFlag(flag);
+                    mob.targetSelector.enableControlFlag(flag);
+                }
+            }
         }
     }
     @SubscribeEvent
@@ -161,10 +185,20 @@ public class StunScaleStuff {
                     int duration = stunScale.getDefaultStunDurationFromHits();
                     event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), duration, 1, false, false, false));
                     int num = random.nextInt(0, SwordClashSounds.amount);
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SwordClashSounds.swordClashes.get(num).getSound(), 1F, 1F));
+                    event.getEntity().playSound(SwordClashSounds.swordClashes.get(num).getSound(), 1F, 1F);
                 }
                 stunScale.updateData();
             });
+        }
+    }
+
+    @SubscribeEvent
+    static void stunMouseInputs(InputEvent.InteractionKeyMappingTriggered event) {
+        if (Minecraft.getInstance().level != null) {
+            assert Minecraft.getInstance().player != null;
+            Player player = Minecraft.getInstance().player;
+            event.setCanceled(player.hasEffect(StatusEffectsMobEffect.STUN.get()));
+            event.setSwingHand(!player.hasEffect(StatusEffectsMobEffect.STUN.get()) && !player.hasEffect(StatusEffectsMobEffect.DISARM.get()));
         }
     }
 
@@ -172,6 +206,7 @@ public class StunScaleStuff {
     @SubscribeEvent(receiveCanceled = true)
     public static void renderStunBarExp(RenderGuiOverlayEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
+        if(minecraft.player.isCreative() || minecraft.player.isSpectator()) { return; }
         if(event.getOverlay().equals(VanillaGuiOverlay.EXPERIENCE_BAR.type())) {
             StunScaleAttacher.getStunScale(minecraft.player).ifPresent(stunScale -> {
                 if (stunScale.getStunPoints() > 0 && !stunScale.isStunned()) {
@@ -180,38 +215,97 @@ public class StunScaleStuff {
                     int stunPercent = (int) ((float) currentPoints / (float) maxStunPoint * 182);
                     PoseStack poseStack = event.getPoseStack();
                     int x = event.getWindow().getGuiScaledWidth() / 2 - 91;
-                    event.setCanceled(true);
-                    RenderSystem.setShaderTexture(0, STUN_BAR_GUI);
-
                     int y = event.getWindow().getGuiScaledHeight() - 29;
+                    event.setCanceled(true);
+                    RenderSystem.setShaderTexture(0, BAR_GUI);
+
 
                     GuiComponent.blit(poseStack, x, y, 0, 0, 182, 5, 182, 182);
                     GuiComponent.blit(poseStack, x, y, 0, 0, 5F, stunPercent, 5, 182, 182);
-
-                    String titleStunBar = I18n.get("gui.statuseffects.stun_bar");
-                    int i1 = (event.getWindow().getGuiScaledWidth() - minecraft.font.width(titleStunBar)) / 2;
-                    int j1 = event.getWindow().getGuiScaledHeight() - 35;
-
-                    int color = 5832704;
-
-/*                    minecraft.font.draw(poseStack, titleStunBar, 1, 0, color);
-                    minecraft.font.draw(poseStack, titleStunBar, -1, 0, color);
-                    minecraft.font.draw(poseStack, titleStunBar, 0, 1, color);
-                    minecraft.font.draw(poseStack, titleStunBar, 0, -1, color);
-                    minecraft.font.draw(poseStack, titleStunBar, 0, 0, 16770638);
-*/                } else if (minecraft.player.hasEffect(StatusEffectsMobEffect.STUN.get())) {
+                } else if (minecraft.player.hasEffect(StatusEffectsMobEffect.STUN.get())) {
                     int currentStun = stunScale.getCurrentDuration();
                     int initStun = stunScale.getStunDurationInitial();
                     int durationPercent = (int) ((float) currentStun / (float) initStun * 182);
                     PoseStack poseStack = event.getPoseStack();
                     int x = event.getWindow().getGuiScaledWidth() / 2 - 91;
                     event.setCanceled(true);
-                    RenderSystem.setShaderTexture(0, STUN_BAR_GUI);
+                    RenderSystem.setShaderTexture(0, BAR_GUI);
                     int y = event.getWindow().getGuiScaledHeight() - 29;
                     GuiComponent.blit(poseStack, x, y, 0, 10F, 182, 5, 182, 182);
                     GuiComponent.blit(poseStack, x, y, 0, 0, 15F, durationPercent, 5, 182, 182);
                 }
             });
         }
+    }
+
+    @SubscribeEvent
+    public static void renderStunBar(RenderLivingEvent.Pre event) {
+        LivingEntity entity = event.getEntity();
+        PoseStack poseStack = event.getPoseStack();
+        if (entity instanceof Player player) {
+            if (player.isSpectator() || player.isCreative()) { return; }
+        }
+        Quaternionf cameraOrientation = Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation();
+        MultiBufferSource buffers = event.getMultiBufferSource();
+        if (!entity.getPassengers().isEmpty()) {
+            return;
+        }
+
+        final boolean boss = !entity.canChangeDimensions();
+        poseStack.pushPose();
+        final float globalScale = 0.03F;
+        poseStack.translate(0, entity.getBbHeight() + 0.5, 0);
+        poseStack.mulPose(cameraOrientation);
+        final int light = 0xF000F0;
+        poseStack.scale(-globalScale, -globalScale, -globalScale);
+
+        VertexConsumer stunBar = buffers.getBuffer(StunBarType.BAR_TEXTURE_TYPE);
+
+        StunScaleAttacher.getStunScale(entity).ifPresent(stunScale -> {
+            if (stunScale.getStunPoints() > 0 || stunScale.isStunned()) {
+                int emptyR = 255;
+                int emptyG = 255;
+                int emptyB = 255;
+                if (!stunScale.isStunned()) {
+                    // renders when entity isn't stunned yet
+                    double pointsBeforeStunned = stunScale.getMaxStunPoints();
+                    double currentStunPoints = stunScale.getStunPoints();
+                    float currentStunPercent = (float) (currentStunPoints / pointsBeforeStunned);
+                    int r = 255;
+                    int g = 255;
+                    int b = 255;
+                    // empty bar
+                    stunBar.vertex(poseStack.last().pose(), -32, 0, 0.001F).color(emptyR, emptyG, emptyB, 255).uv(0.0F, 0.0F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), -32, 8, 0.001F).color(emptyR, emptyG, emptyB, 255).uv(0.0F, 0.25F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), 32, 8, 0.001F).color(emptyR, emptyG, emptyB, 255).uv(1.0F, 0.25F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), 32, 0, 0.001F).color(emptyR, emptyG, emptyB, 255).uv(1.0F, 0.0F).uv2(light).endVertex();
+                    // filling
+                    stunBar.vertex(poseStack.last().pose(), -28, 0, 0.002F).color(r, g, b, 255).uv(0.0F, 0.25F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), -28, 8, 0.002F).color(r, g, b, 255).uv(0.0F, 0.5F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), -28 + 56 * currentStunPercent, 8, 0.002F).color(r, g, b, 255).uv(currentStunPercent, 0.5F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), -28 + 56 * currentStunPercent, 0, 0.002F).color(r, g, b, 255).uv(currentStunPercent, 0.25F).uv2(light).endVertex();
+                } else {
+                    // renders when entity is stunned
+                    double initDuration = stunScale.getStunDurationInitial();
+                    double currentDuration = stunScale.getCurrentDuration();
+                    float currentStunDurationPercent = (float) (currentDuration / initDuration);
+                    int changingRed = StunScaleStuff.changingRed;
+                    int r = 255;
+                    int g = 255;
+                    int b = 255;
+                    // empty bar again
+                    stunBar.vertex(poseStack.last().pose(), -32, 0, 0.001F).color(changingRed, emptyG, emptyB, 255).uv(0.0F, 0.5F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), -32, 8, 0.001F).color(changingRed, emptyG, emptyB, 255).uv(0.0F, 0.75F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), 32, 8, 0.001F).color(changingRed, emptyG, emptyB, 255).uv(1.0F, 0.75F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), 32, 0, 0.001F).color(changingRed, emptyG, emptyB, 255).uv(1.0F, 0.5F).uv2(light).endVertex();
+                    // filling
+                    stunBar.vertex(poseStack.last().pose(), -28, 0, 0.002F).color(r, g, b, 255).uv(0.0F, 0.75F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), -28, 8, 0.002F).color(r, g, b, 255).uv(0.0F, 1.0F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), -28 + 56 * currentStunDurationPercent, 8, 0.002F).color(r, g, b, 255).uv(currentStunDurationPercent, 1.0F).uv2(light).endVertex();
+                    stunBar.vertex(poseStack.last().pose(), -28 + 56 * currentStunDurationPercent, 0, 0.002F).color(r, g, b, 255).uv(currentStunDurationPercent, 0.75F).uv2(light).endVertex();
+                }
+            }
+        });
+        poseStack.popPose();
     }
 }

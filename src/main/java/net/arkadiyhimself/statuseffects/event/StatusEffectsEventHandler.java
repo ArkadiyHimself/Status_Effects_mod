@@ -11,6 +11,7 @@ import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,6 +26,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -50,7 +53,7 @@ public class StatusEffectsEventHandler {
 
         if (event.getSource().isExplosion() && event.getAmount() > 4) {
             int i = (int) event.getAmount() * 10;
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), Math.min(i, 300)));
+            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), Math.min(i, 300), 1, false, false));
             if (event.getEntity() instanceof Player) {
                 Entity entity = event.getEntity();
                 NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
@@ -58,18 +61,9 @@ public class StatusEffectsEventHandler {
 
         }
 
-        if (event.getSource() == DamageSource.FREEZE) {
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.FREEZE.get(), 100));
-        }
         if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get()) && event.getAmount() > 0) {
             if (event.getEntity().getMaxHealth() <= 100) {
                 LivingEntity entity = event.getEntity();
-                double x = entity.getX();
-                double y = entity.getY();
-                double z = entity.getZ();
-                Minecraft.getInstance().level.addParticle(StatusEffectsParticles.FALLEN_SOUL.get(), true,
-                        x, y + 2, z, 0, 0, 0);
-                entity.playSound(StatusEffectsSounds.FALLEN_BREATH.getSound(), 1F, 1F);
                 entity.removeEffect(StatusEffectsMobEffect.DOOMED.get());
                 event.setAmount(Float.MAX_VALUE);
             } else {
@@ -114,24 +108,6 @@ public class StatusEffectsEventHandler {
             }
         }
     }
-
-    @SubscribeEvent
-    static void snowballFreeze(ProjectileImpactEvent event) {
-        if (event.getRayTraceResult() instanceof EntityHitResult && event.getProjectile() instanceof Snowball) {
-            HitResult hitresult = event.getRayTraceResult();
-            Entity entity = ((EntityHitResult) hitresult).getEntity();
-            ((LivingEntity) entity).addEffect(new MobEffectInstance(StatusEffectsMobEffect.FREEZE.get(), 30));
-        }
-    }
-    @SubscribeEvent
-    static void stunMouseInputs(InputEvent.InteractionKeyMappingTriggered event) {
-        if (Minecraft.getInstance().level != null) {
-            assert Minecraft.getInstance().player != null;
-            Player player = Minecraft.getInstance().player;
-            event.setCanceled(player.hasEffect(StatusEffectsMobEffect.STUN.get()));
-            event.setSwingHand(!player.hasEffect(StatusEffectsMobEffect.STUN.get()) && !player.hasEffect(StatusEffectsMobEffect.DISARM.get()));
-        }
-    }
     @SubscribeEvent(priority = EventPriority.HIGH)
     static void effectWasApplied(MobEffectEvent.Added event) {
         if (event.getEffectInstance().getEffect() == StatusEffectsMobEffect.DOOMED.get() && event.getEntity() instanceof Player) {
@@ -141,33 +117,17 @@ public class StatusEffectsEventHandler {
         if (event.getEntity() instanceof Warden && event.getEffectInstance().getEffect() == StatusEffectsMobEffect.DISARM.get()) {
             SonicBoom.setCooldown(event.getEntity(), 0);
         }
-        if (event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
-            StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
-                int duration = event.getEffectInstance().getDuration();
-                stunScale.setStunDurationInitial(duration);
-                stunScale.updateData();
-            });
-            if(event.getEntity() instanceof Mob mob) {
-                for (Goal.Flag flag : Goal.Flag.values()) {
-                    mob.goalSelector.disableControlFlag(flag);
-                    mob.targetSelector.disableControlFlag(flag);
-                }
-            }
-        }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    static void effectEnded(MobEffectEvent.Remove event) {
-        if (event.getEntity() instanceof Mob mob && event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
-            for (Goal.Flag flag : Goal.Flag.values()) {
-                mob.goalSelector.enableControlFlag(flag);
-                mob.targetSelector.enableControlFlag(flag);
-            }
-        }
-    }
     @SubscribeEvent
-    static void entityDied(LivingDeathEvent event) {
+    public static void entityDied(LivingDeathEvent event) {
         if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get())) {
+            LivingEntity entity = event.getEntity();
+            double x = entity.getX();
+            double y = entity.getY();
+            double z = entity.getZ();
+            ((ServerLevel) entity.level).sendParticles(StatusEffectsParticles.FALLEN_SOUL.get(), x, y + 2, z, 1, 0, 0, 0, 0);
+            entity.playSound(StatusEffectsSounds.DOOMED.getSound());
         }
     }
 }

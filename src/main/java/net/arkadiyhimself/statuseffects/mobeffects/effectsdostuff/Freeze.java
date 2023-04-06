@@ -1,5 +1,6 @@
 package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
+import net.arkadiyhimself.statuseffects.capability.FreezeEffectAttacher;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -7,20 +8,33 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
 public class Freeze extends MobEffect {
-    public Freeze(MobEffectCategory p_19451_, int p_19452_) {
-        super(p_19451_, p_19452_);
+    boolean noLongerFrozen;
+    int duration;
+    public Freeze(MobEffectCategory mobEffectCategory, int i) {
+        super(mobEffectCategory, i);
     }
 
     @Override
-    public void applyEffectTick(LivingEntity p_19467_, int p_19468_) {
-        if(p_19467_.fireImmune() || p_19467_.hasEffect(MobEffects.FIRE_RESISTANCE)) {
-            p_19467_.hurt(DamageSource.MAGIC, 1.0F);
+    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
+        if(pLivingEntity.fireImmune() || pLivingEntity.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+            pLivingEntity.hurt(DamageSource.MAGIC, 1.0F);
         }
-        super.applyEffectTick(p_19467_, p_19468_);
+        FreezeEffectAttacher.getHasFreeze(pLivingEntity).ifPresent(hasFreezeEffect -> {
+            hasFreezeEffect.setCurrentDuration(duration);
+            if(noLongerFrozen) {
+                hasFreezeEffect.setFrozen(false);
+            }
+            hasFreezeEffect.updateData();
+        });
+        super.applyEffectTick(pLivingEntity, pAmplifier);
 
     }
 
     @Override
-    public boolean isDurationEffectTick(int p_19455_, int p_19456_) { return true; }
+    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+        noLongerFrozen = pDuration < 2;
+        duration = pDuration;
+        return true;
+    }
 
 }

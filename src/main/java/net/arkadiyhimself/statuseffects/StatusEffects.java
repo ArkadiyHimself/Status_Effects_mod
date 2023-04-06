@@ -3,6 +3,7 @@ package net.arkadiyhimself.statuseffects;
 import com.mojang.logging.LogUtils;
 import net.arkadiyhimself.statuseffects.attributes.StatusEffectsAttributes;
 import net.arkadiyhimself.statuseffects.blocks.StatusEffectsBlocks;
+import net.arkadiyhimself.statuseffects.capability.FreezeEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
 import net.arkadiyhimself.statuseffects.items.StatusEffectsModItem;
 import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
@@ -47,6 +48,7 @@ public class StatusEffects
 
         modEventBus.addListener(this::addCreative);
         StunScaleAttacher.register();
+        FreezeEffectAttacher.register();
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

@@ -13,9 +13,9 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import javax.annotation.Nullable;
 
 public class StunScaleAttacher extends CapabilityAttacher {
-    private static final Class<StunScale> CAPABILITY_CLASS = StunScale.class;
+    private static final Class<StunScale> STUN_SCALE_CLASS = StunScale.class;
     public static final Capability<StunScale> STUN_POINTS_CAPABILITY = getCapability(new CapabilityToken<>() {});
-    public static final ResourceLocation STUN_POINTS_CAPABILITY_RL = new ResourceLocation(StatusEffects.MODID, "properties");
+    public static final ResourceLocation STUN_POINTS_CAPABILITY_RL = new ResourceLocation(StatusEffects.MODID, "properties_freeze");
 
     @SuppressWarnings("ConstantConditions")
     @Nullable
@@ -30,7 +30,7 @@ public class StunScaleAttacher extends CapabilityAttacher {
         genericAttachCapability(event, new StunScale(entity), STUN_POINTS_CAPABILITY, STUN_POINTS_CAPABILITY_RL);
     }
     public static void register() {
-        CapabilityAttacher.registerCapability(CAPABILITY_CLASS);
+        CapabilityAttacher.registerCapability(STUN_SCALE_CLASS);
         CapabilityAttacher.registerEntityAttacher(LivingEntity.class, StunScaleAttacher::attacher, StunScaleAttacher::getStunScale, true);
     }
 

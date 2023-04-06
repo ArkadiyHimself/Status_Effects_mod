@@ -3,6 +3,7 @@ package net.arkadiyhimself.statuseffects.networking;
 import com.google.common.collect.ImmutableList;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
 import net.arkadiyhimself.statuseffects.StatusEffects;
+import net.arkadiyhimself.statuseffects.capability.FreezeEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
@@ -36,6 +37,7 @@ public class NetworkHandler {
                 .add(RingingInEarsS2CPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(StunScaleAttacher.STUN_POINTS_CAPABILITY_RL,StunScaleAttacher::getStunScaleUnwrap);
+        SimpleEntityCapabilityStatusPacket.registerRetriever(FreezeEffectAttacher.HAS_FREEZE_CAPABILITY_RL, FreezeEffectAttacher::getHasFreezeUnwrap);
         packets.forEach(consumer -> consumer.accept(INSTANCE, getNextId()));
     }
 

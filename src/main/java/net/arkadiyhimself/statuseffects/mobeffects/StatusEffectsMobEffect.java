@@ -31,7 +31,7 @@ public class StatusEffectsMobEffect extends MobEffect {
             () -> new Freeze(MobEffectCategory.HARMFUL, 8780799).addAttributeModifier(Attributes.ATTACK_SPEED,
                             "7107DE5E-7CE8-4030-940E-514C1F160890", (double)-0.8F, AttributeModifier.Operation.ADDITION).
                     addAttributeModifier(Attributes.MOVEMENT_SPEED, "7107DE5E-7CE8-4030-940E-514C1F160890",
-                            (double)-0.8F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                            (double)-0.6F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
 
     public static final RegistryObject<MobEffect> DISARM = EFFECTS.register("disarm",
