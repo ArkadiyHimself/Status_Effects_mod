@@ -7,8 +7,10 @@ import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
 import net.arkadiyhimself.statuseffects.items.StatusEffectsModItem;
 import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
+import net.arkadiyhimself.statuseffects.sound.SoundWhispers;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
+import net.arkadiyhimself.statuseffects.sound.SwordClashSounds;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -32,9 +34,13 @@ public class StatusEffects
         StatusEffectsMobEffect.register(modEventBus);
         StatusEffectsModItem.register(modEventBus);
         StatusEffectsBlocks.register(modEventBus);
-        StatusEffectsSounds.register(modEventBus);
         StatusEffectsParticles.register(modEventBus);
         StatusEffectsAttributes.register(modEventBus);
+
+        // sounds
+        StatusEffectsSounds.register(modEventBus);
+        SoundWhispers.register(modEventBus);
+        SwordClashSounds.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);

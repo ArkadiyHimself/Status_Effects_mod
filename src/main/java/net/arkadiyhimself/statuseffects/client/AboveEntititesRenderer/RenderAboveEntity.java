@@ -1,22 +1,22 @@
-package net.arkadiyhimself.statuseffects.client.StunRender;
+package net.arkadiyhimself.statuseffects.client.AboveEntititesRenderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
 import net.arkadiyhimself.statuseffects.event.StunScaleStuff;
-import net.minecraft.client.Minecraft;
+import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.joml.Quaternionf;
 
-public class StunRenderer {
+public class RenderAboveEntity {
     public static void renderStunBar(Entity entity, PoseStack poseStack,
                                      MultiBufferSource buffers, Quaternionf cameraOrientation) {
-        final Minecraft mc = Minecraft.getInstance();
         if (!(entity instanceof LivingEntity living) || !entity.getPassengers().isEmpty()) {
             return;
         }
+
         final boolean boss = !entity.canChangeDimensions();
         poseStack.pushPose();
         poseStack.popPose();
@@ -28,7 +28,7 @@ public class StunRenderer {
         poseStack.popPose();
         poseStack.scale(-globalScale, -globalScale, -globalScale);
 
-        VertexConsumer stunBar = buffers.getBuffer(StunBar.BAR_TEXTURE_TYPE);
+        VertexConsumer stunBar = buffers.getBuffer(StunBarType.BAR_TEXTURE_TYPE);
 
         StunScaleAttacher.getStunScale(living).ifPresent(stunScale -> {
             if (stunScale.getStunPoints() > 0 || stunScale.isStunned()) {
@@ -76,5 +76,28 @@ public class StunRenderer {
                 }
             }
         });
+        }
+    public static void renderSnowCrystal(Entity entity, PoseStack poseStack,
+                                         MultiBufferSource buffers, Quaternionf cameraOrientation) {
+        if (!(entity instanceof LivingEntity living) || !entity.getPassengers().isEmpty()) {
+            return;
+        }
+        final boolean boss = !entity.canChangeDimensions();
+        poseStack.pushPose();
+        poseStack.popPose();
+        final float globalScale = 0.03F;
+        poseStack.translate(0, entity.getBbHeight() + 3F, 0);
+        poseStack.mulPose(cameraOrientation);
+        final int light = 0xF000F0;
+        poseStack.pushPose();
+        poseStack.popPose();
+        poseStack.scale(-globalScale, -globalScale, -globalScale);
+
+        VertexConsumer snowCrystal = buffers.getBuffer(SnowCrystalType.SNOW_CRYSTAL_TYPE);
+        float freezePercent = living.hasEffect(StatusEffectsMobEffect.FREEZE.get()) ? 255 : living.getPercentFrozen() * 255;
+        snowCrystal.vertex(poseStack.last().pose(), -12, 0, -0.1F).color(255, 255, 255, freezePercent).uv(0.0F, 0.0F).uv2(light).endVertex();
+        snowCrystal.vertex(poseStack.last().pose(), -12, 24, -0.1F).color(255, 255, 255, freezePercent).uv(0.0F, 1.0F).uv2(light).endVertex();
+        snowCrystal.vertex(poseStack.last().pose(), 12, 24, -0.1F).color(255, 255, 255, freezePercent).uv(1.0F, 1.0F).uv2(light).endVertex();
+        snowCrystal.vertex(poseStack.last().pose(), 12, 0, -0.1F).color(255, 255, 255, freezePercent).uv(1.0F, 0.0F).uv2(light).endVertex();
     }
 }

@@ -69,7 +69,6 @@ public class StunScale extends LivingEntityCapability {
     private final int minStunPoints = 0; // the minimum amount of stun points
     private int maxStunPoints = 200; // the amount of stun points entity can get before getting stunned
     private int decayDelay; // the delay before stun points start decaying after each hit
-    private final int defaultPointsFromHit = 50; // the default amount of points gotten from being hit
     private final int defaultDecayDelay = 50; // the default delay before stun points start decaying after each hit
     private final int defaultStunDurationFromHits = 50; // stun duration from being stunned by being hit
     private int stunDurationInitial; // stun duration from being stunned in any way
@@ -127,8 +126,8 @@ public class StunScale extends LivingEntityCapability {
     public int getDefaultDecayDelay() {
         return defaultDecayDelay;
     }
-    public int getDefaultPointsFromHit() {
-        return defaultPointsFromHit;
+    public int getMaxStunPointsFromHit() {
+        return (int) Math.ceil(this.getMaxStunPoints() * 0.7);
     }
 
     // default stun duration form

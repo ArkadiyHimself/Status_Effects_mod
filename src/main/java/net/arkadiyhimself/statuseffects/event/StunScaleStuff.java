@@ -6,10 +6,14 @@ import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.capability.StunScale;
 import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
+import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
+import net.arkadiyhimself.statuseffects.sound.SwordClashSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -28,9 +32,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = StatusEffects.MODID)
 public class StunScaleStuff {
+
+    static Random random = new Random();
+
     static ArrayList<DamageSource> nonStunningSource = new ArrayList<>(){{
         add(DamageSource.FREEZE);
         add(DamageSource.ON_FIRE);
@@ -61,6 +69,9 @@ public class StunScaleStuff {
         if (event.getEntity() instanceof Player player) {
             StunScaleAttacher.getStunScale(player).ifPresent(stunScale -> {
                 stunScale.setStunPoints(0);
+                stunScale.setStunned(false);
+                stunScale.setDecayDelay(0);
+                stunScale.setCurrentDuration(0);
                 stunScale.updateData();
             });
         }
@@ -69,7 +80,14 @@ public class StunScaleStuff {
     public static void modeChangeReset(PlayerEvent.PlayerChangeGameModeEvent event) {
         StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
             if(event.getNewGameMode() == GameType.CREATIVE || event.getNewGameMode() == GameType.SPECTATOR) {
+                if(event.getEntity().hasEffect(StatusEffectsMobEffect.STUN.get())) {
+                    event.getEntity().removeEffect(StatusEffectsMobEffect.STUN.get());
+                }
                 stunScale.setStunPoints(0);
+                stunScale.setStunned(false);
+                stunScale.setDecayDelay(0);
+                stunScale.setCurrentDuration(0);
+                stunScale.updateData();
             }
         });
     }
@@ -124,13 +142,26 @@ public class StunScaleStuff {
                 }
             }
             StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
-                if (event.getAmount() > 0) {
-                    stunScale.addStunPoints(50);
+                int prematureStun = (int) Math.ceil(stunScale.getStunPoints() / stunScale.getMaxStunPoints() * stunScale.getDefaultStunDurationFromHits());
+                if (event.getSource() == DamageSource.FALL || event.getSource().isExplosion()) {
+                    int instaStunDuration = (int) event.getAmount() * 5;
+                    int finalDuration = Math.max(instaStunDuration, prematureStun);
+                    event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(finalDuration, 150)));
+                    return;
+                }
+                if ("mob".equals(event.getSource().getMsgId()) || "player".equals(event.getSource().getMsgId())) {
+                    int newStunPoints = (int) (event.getAmount() / event.getEntity().getMaxHealth() * stunScale.getMaxStunPoints() * 2);
+                    int minStunPointsAdded = (int) Math.ceil(stunScale.getMaxStunPoints() * 0.15F);
+
+                    newStunPoints = Math.max(minStunPointsAdded, newStunPoints);
+                    stunScale.addStunPoints(Math.min(stunScale.getMaxStunPointsFromHit(), newStunPoints));
                     stunScale.setDecayDelay(50);
                 }
                 if (stunScale.getStunPoints() == stunScale.getMaxStunPoints()) {
                     int duration = stunScale.getDefaultStunDurationFromHits();
                     event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), duration, 1, false, false, false));
+                    int num = random.nextInt(0, SwordClashSounds.amount);
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SwordClashSounds.swordClashes.get(num).getSound(), 1F, 1F));
                 }
                 stunScale.updateData();
             });
@@ -146,7 +177,7 @@ public class StunScaleStuff {
                 if (stunScale.getStunPoints() > 0 && !stunScale.isStunned()) {
                     int currentPoints = stunScale.getStunPoints();
                     int maxStunPoint = stunScale.getMaxStunPoints();
-                    int stunPercent = (int) Math.ceil((float) currentPoints / (float) maxStunPoint * 182);
+                    int stunPercent = (int) ((float) currentPoints / (float) maxStunPoint * 182);
                     PoseStack poseStack = event.getPoseStack();
                     int x = event.getWindow().getGuiScaledWidth() / 2 - 91;
                     event.setCanceled(true);
@@ -171,7 +202,7 @@ public class StunScaleStuff {
 */                } else if (minecraft.player.hasEffect(StatusEffectsMobEffect.STUN.get())) {
                     int currentStun = stunScale.getCurrentDuration();
                     int initStun = stunScale.getStunDurationInitial();
-                    int durationPercent = (int) Math.ceil((float) currentStun / (float) initStun * 182);
+                    int durationPercent = (int) ((float) currentStun / (float) initStun * 182);
                     PoseStack poseStack = event.getPoseStack();
                     int x = event.getWindow().getGuiScaledWidth() / 2 - 91;
                     event.setCanceled(true);

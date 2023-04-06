@@ -15,7 +15,12 @@ public class StatusEffectsParticles {
 
     public static void register(IEventBus eventBus) { PARTICLES.register(eventBus); }
 
-    public static final RegistryObject<SimpleParticleType> DOOMED_SOUL = PARTICLES.register("doomed_soul",
+    public static final RegistryObject<SimpleParticleType> DOOMED_SOUL1 = PARTICLES.register("doomed_soul1",
             () -> new SimpleParticleType(true));
-
+    public static final RegistryObject<SimpleParticleType> DOOMED_SOUL2 = PARTICLES.register("doomed_soul2",
+            () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> DOOMED_SOUL3 = PARTICLES.register("doomed_soul3",
+            () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> FALLEN_SOUL = PARTICLES.register("fallen_soul",
+            () -> new SimpleParticleType(true));
 }

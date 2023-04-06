@@ -5,22 +5,20 @@ import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.data.SpriteSourceProvider;
-import org.jetbrains.annotations.NotNull;
 
-public class DoomedParticles extends RisingParticle {
+public class DoomedSouls extends RisingParticle {
 
     private final SpriteSet spriteSet;
 
-    public DoomedParticles(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet spriteSet)  {
+    public DoomedSouls(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet spriteSet)  {
         super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
 
         this.friction = 0.8F;
         this.xd = pXSpeed;
         this.yd = pYSpeed;
         this.zd = pZSpeed;
-        this.quadSize *= 1.4;
-        this.lifetime = 20;
+        this.quadSize *= 1.1;
+        this.lifetime = 15;
         this.spriteSet = spriteSet;
 
         this.setSpriteFromAge(spriteSet);
@@ -54,8 +52,7 @@ public class DoomedParticles extends RisingParticle {
         }
 
         public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
-            return new DoomedParticles(level, x, y, z, dx, dy, dz, this.spriteSet);
+            return new DoomedSouls(level, x, y, z, dx, dy, dz, this.spriteSet);
         }
     }
-
 }

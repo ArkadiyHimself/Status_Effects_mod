@@ -1,6 +1,5 @@
 {
   "ringing_deaf": {
-    "category": "master",
     "sounds": [
       {
         "name": "statuseffects:ringing_deaf",
@@ -9,7 +8,6 @@
     ]
   },
   "ringing_long": {
-    "category": "master",
     "sounds": [
       {
         "name": "statuseffects:ringing_long",
@@ -18,7 +16,6 @@
     ]
   },
   "doomed": {
-    "category": "master",
     "sounds": [
       {
         "name": "statuseffects:doomed",
@@ -27,7 +24,6 @@
     ]
   },
   "undoomed": {
-    "category": "master",
     "sounds": [
       {
         "name": "statuseffects:undoomed",
@@ -35,47 +31,100 @@
       }
     ]
   },
-  "whisper1": {
-    "category": "master",
+  "fallen_breath" : {
     "sounds": [
       {
-        "name": "statuseffects:whisper1",
+        "name": "statuseffects:fallen_breath",
         "stream": false
       }
     ]
   },
-  "whisper2": {
-    "category": "master",
+  "whispers.whisper1": {
+    "subtitle": "subtitles.whisper1",
     "sounds": [
       {
-        "name": "statuseffects:whisper2",
+        "name": "statuseffects:whispers/whisper1",
         "stream": false
       }
     ]
   },
-  "whisper3": {
-    "category": "master",
+  "whispers.whisper2": {
+    "subtitle": "subtitles.whisper2",
     "sounds": [
       {
-        "name": "statuseffects:whisper3",
+        "name": "statuseffects:whispers/whisper2",
         "stream": false
       }
     ]
   },
-  "whisper4": {
-    "category": "master",
+  "whispers.whisper3": {
+    "subtitle": "subtitles.whisper3",
     "sounds": [
       {
-        "name": "statuseffects:whisper4",
+        "name": "statuseffects:whispers/whisper3",
         "stream": false
       }
     ]
   },
-  "whisper5": {
-    "category": "master",
+  "whispers.whisper4": {
+    "subtitle": "subtitles.whisper4",
     "sounds": [
       {
-        "name": "statuseffects:whisper5",
+        "name": "statuseffects:whispers/whisper4",
+        "stream": false
+      }
+    ]
+  },
+  "whispers.whisper5": {
+    "subtitle": "subtitles.whisper5",
+    "sounds": [
+      {
+        "name": "statuseffects:whispers/whisper5",
+        "stream": false
+      }
+    ]
+  },
+  "swordclash.sword_clashing1" : {
+    "subtitle": "subtitles.swordclash",
+    "sounds": [
+      {
+        "name" : "statuseffects:swordclash/sword_clashing1",
+        "stream": false
+      }
+    ]
+  },
+  "swordclash.sword_clashing2" : {
+    "subtitle": "subtitles.swordclash",
+    "sounds": [
+      {
+        "name" : "statuseffects:swordclash/sword_clashing2",
+        "stream": false
+      }
+    ]
+  },
+  "swordclash.sword_clashing3" : {
+    "subtitle": "subtitles.swordclash",
+    "sounds": [
+      {
+        "name" : "statuseffects:swordclash/sword_clashing3",
+        "stream": false
+      }
+    ]
+  },
+  "swordclash.sword_clashing4" : {
+    "subtitle": "subtitles.swordclash",
+    "sounds": [
+      {
+        "name" : "statuseffects:swordclash/sword_clashing4",
+        "stream": false
+      }
+    ]
+  },
+  "swordclash.sword_clashing5" : {
+    "subtitle": "subtitles.swordclash",
+    "sounds": [
+      {
+        "name" : "statuseffects:swordclash/sword_clashing5",
         "stream": false
       }
     ]

@@ -17,7 +17,7 @@ public record UndoomedSoundS2CPacket() implements IPacket {
     public void handle(NetworkEvent.Context context) {
         context.enqueueWork(() -> {
             Minecraft.getInstance().getSoundManager().
-                    play(SimpleSoundInstance.forUI(StatusEffectsSounds.UNDOOMED.get(), 1.0F, 1.0F));
+                    play(SimpleSoundInstance.forUI(StatusEffectsSounds.UNDOOMED.getSound(), 1.0F, 1.0F));
         });
         context.setPacketHandled(true);
     }

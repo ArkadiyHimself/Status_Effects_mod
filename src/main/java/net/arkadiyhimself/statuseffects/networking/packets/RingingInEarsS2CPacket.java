@@ -16,7 +16,7 @@ public record RingingInEarsS2CPacket() implements IPacket {
     public void handle(NetworkEvent.Context context) {
         context.enqueueWork(() -> {
             Minecraft.getInstance().getSoundManager().
-                    play(SimpleSoundInstance.forUI(StatusEffectsSounds.RINGING_LONG.get(), 1.0F, 3.3F));
+                    play(SimpleSoundInstance.forUI(StatusEffectsSounds.RINGING_LONG.getSound(), 1.0F, 3.3F));
         });
         context.setPacketHandled(true);
     }

@@ -1,24 +1,23 @@
 package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
-import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
+import net.arkadiyhimself.statuseffects.sound.SoundWhispers;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.Supplier;
 
 public class Doomed extends MobEffect {
-    protected static final ResourceLocation SWARMING_SOULS = new ResourceLocation(StatusEffects.MODID, "textures/misc/swarming_souls.png");
-
     double x;
     double y;
     double z;
@@ -29,15 +28,11 @@ public class Doomed extends MobEffect {
     int whispercooldown = 80;
 
     int soulcooldown = 20;
-
-    ArrayList<SoundEvent> whispers = new ArrayList<>(){{
-        add(StatusEffectsSounds.WHISPER1.get());
-        add(StatusEffectsSounds.WHISPER2.get());
-        add(StatusEffectsSounds.WHISPER3.get());
-        add(StatusEffectsSounds.WHISPER4.get());
-        add(StatusEffectsSounds.WHISPER5.get());
+    ArrayList<RegistryObject<SimpleParticleType>> doomedSouls = new ArrayList<>() {{
+        add(StatusEffectsParticles.DOOMED_SOUL1);
+        add(StatusEffectsParticles.DOOMED_SOUL2);
+        add(StatusEffectsParticles.DOOMED_SOUL3);
     }};
-
 
     public Doomed(MobEffectCategory mobEffectCategory, int p_19452_) {
         super(mobEffectCategory, p_19452_);
@@ -51,13 +46,20 @@ public class Doomed extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
+        // cool down decays
         whispercooldown -= 1;
         soulcooldown -= 1;
+
+        // when cool down is 0, sound plays and particles appear
         dowhisper = whispercooldown == 0;
         dospawnsoul = soulcooldown == 0;
 
         if (dospawnsoul) {
-            float radius = pLivingEntity.getBbWidth();
+            // randomly choose one of doomed souls particle
+            int num = random.nextInt(0, 3);
+
+            // getting entity's height and width
+            float radius = pLivingEntity.getBbWidth() * (float) 0.7;
             float height = pLivingEntity.getBbHeight();
             soulcooldown = random.nextInt(6, 8);
             // using supplier to get entity's movement (no idea whether it even matters lmao)
@@ -73,20 +75,21 @@ public class Doomed extends MobEffect {
             boolean negativeZ = random.nextBoolean();
             z = negativeZ ? z * (-1) : z;
             // in the end, the area in which soul particles can spawn looks like side of a cylinder
-            Minecraft.getInstance().level.addParticle(StatusEffectsParticles.DOOMED_SOUL.get(), true,
+            Minecraft.getInstance().level.addParticle(doomedSouls.get(num).get(), true,
                     pLivingEntity.getX() + x, pLivingEntity.getY() + y, pLivingEntity.getZ() + z,
-                    dx.get() * 2.6, dy.get() * 0.2 + 0.1, dz.get() * 2.6);
+                    dx.get() * 1.5, dy.get() * 0.2 + 0.1, dz.get() * 1.5);
         }
 
         if (dowhisper && !doplaysound) {
             // the game randomly decides which whisper sound to play
-            int num = random.nextInt(0,  5);
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(whispers.get(num), 1F, 1F));
+            int num = random.nextInt(0,  SoundWhispers.amount);
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundWhispers.whispers.get(num).getSound(), 1F, 1F));
+            // randomly decide cooldown between 10 and 12 seconds
             whispercooldown = random.nextInt(200, 240);
         }
 
         if (doplaysound && pLivingEntity == Minecraft.getInstance().player) {
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.UNDOOMED.get(), 1F, 1F));
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.UNDOOMED.getSound(), 1F, 1F));
         }
 
         super.applyEffectTick(pLivingEntity, pAmplifier);

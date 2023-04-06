@@ -7,9 +7,11 @@
 
   "gui.statuseffects.stun_bar": "Stun Bar",
 
-  "subtitles.whisper1" : "join us...",
-  "subtitles.whisper2" : "it is your chance!",
-  "subtitles.whisper3" : "many have fallen to us",
-  "subtitles.whisper4" : "just give up...",
-  "subtitles.whisper5" : "become one of us!"
+  "subtitles.whisper1" : "Join us",
+  "subtitles.whisper2" : "It is your chance!",
+  "subtitles.whisper3" : "Rest",
+  "subtitles.whisper4" : "It is good here",
+  "subtitles.whisper5" : "Become one of us!",
+
+  "subtitles.swordclash" : "Stunned!"
 }

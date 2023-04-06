@@ -6,10 +6,13 @@ import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
+import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
+import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -37,19 +40,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class StatusEffectsEventHandler {
     @SubscribeEvent
     public static void damageEffectsApplying(LivingDamageEvent event) {
-        AtomicInteger prematureStun = new AtomicInteger();
-        // here I calculate the stun duration in cases entity had lots of stun points but took little damage from falling/explosion
-        StunScaleAttacher.getStunScale(event.getEntity()).ifPresent(stunScale -> {
-            prematureStun.set((int) Math.ceil((stunScale.getStunPoints() / stunScale.getMaxStunPoints()) * stunScale.getDefaultStunDurationFromHits()));
-
-        });
-
-        if (event.getSource() == DamageSource.FALL) {
-            int i = (int) Math.ceil(event.getAmount() * 5);
-            i = Math.max(i, prematureStun.get());
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(i, 150), 1, false, false, false));
-        }
-
         if ("sonic_boom".equals(event.getSource().getMsgId())) {
             event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), 200, 1, false, false, false));
             if (event.getEntity() instanceof Player) {
@@ -58,17 +48,14 @@ public class StatusEffectsEventHandler {
             }
         }
 
-        if (event.getSource().isExplosion()) {
-            int i = (int) Math.ceil(event.getAmount() * 5);
-            i = Math.max(i, prematureStun.get());
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(i, 150), 1, false, false, false));
-            if (event.getAmount() > 4) {
-                event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), Math.min(i, 150) * 2));
-                if (event.getEntity() instanceof Player) {
-                    Entity entity = event.getEntity();
-                    NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
-                }
+        if (event.getSource().isExplosion() && event.getAmount() > 4) {
+            int i = (int) event.getAmount() * 10;
+            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), Math.min(i, 300)));
+            if (event.getEntity() instanceof Player) {
+                Entity entity = event.getEntity();
+                NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
             }
+
         }
 
         if (event.getSource() == DamageSource.FREEZE) {
@@ -76,7 +63,14 @@ public class StatusEffectsEventHandler {
         }
         if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get()) && event.getAmount() > 0) {
             if (event.getEntity().getMaxHealth() <= 100) {
-                event.getEntity().removeEffect(StatusEffectsMobEffect.DOOMED.get());
+                LivingEntity entity = event.getEntity();
+                double x = entity.getX();
+                double y = entity.getY();
+                double z = entity.getZ();
+                Minecraft.getInstance().level.addParticle(StatusEffectsParticles.FALLEN_SOUL.get(), true,
+                        x, y + 2, z, 0, 0, 0);
+                entity.playSound(StatusEffectsSounds.FALLEN_BREATH.getSound(), 1F, 1F);
+                entity.removeEffect(StatusEffectsMobEffect.DOOMED.get());
                 event.setAmount(Float.MAX_VALUE);
             } else {
                 event.setAmount(event.getAmount() * 2);
@@ -171,5 +165,9 @@ public class StatusEffectsEventHandler {
             }
         }
     }
-
+    @SubscribeEvent
+    static void entityDied(LivingDeathEvent event) {
+        if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get())) {
+        }
+    }
 }
