@@ -1,6 +1,6 @@
 package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
-import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
+import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +30,7 @@ public class Stunning extends MobEffect {
                 mob.targetSelector.enableControlFlag(flag);
             }
         }
-        StunScaleAttacher.getStunScale(pLivingEntity).ifPresent(stunScale -> {
+        StunEffectAttacher.getStunEffect(pLivingEntity).ifPresent(stunScale -> {
             stunScale.setCurrentDuration(currentDuration);
             if (returnAI) {
                 stunScale.setStunned(false);
