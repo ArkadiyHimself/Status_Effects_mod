@@ -16,6 +16,7 @@
     ]
   },
   "doomed": {
+    "subtitle": "subtitles.doomed",
     "sounds": [
       {
         "name": "statuseffects:doomed",
@@ -35,6 +36,14 @@
     "sounds": [
       {
         "name": "statuseffects:fallen_breath",
+        "stream": false
+      }
+    ]
+  },
+  "attack_denied" : {
+    "sounds": [
+      {
+        "name": "statuseffects:attack_denied",
         "stream": false
       }
     ]

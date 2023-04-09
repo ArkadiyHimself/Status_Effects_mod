@@ -1,10 +1,7 @@
 package net.arkadiyhimself.statuseffects.mobeffects;
 
 import net.arkadiyhimself.statuseffects.StatusEffects;
-import net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff.Deafening;
-import net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff.Freeze;
-import net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff.Doomed;
-import net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff.Stunning;
+import net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff.*;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -32,10 +29,8 @@ public class StatusEffectsMobEffect extends MobEffect {
                             "7107DE5E-7CE8-4030-940E-514C1F160890", (double)-0.8F, AttributeModifier.Operation.ADDITION).
                     addAttributeModifier(Attributes.MOVEMENT_SPEED, "7107DE5E-7CE8-4030-940E-514C1F160890",
                             (double)-0.6F, AttributeModifier.Operation.MULTIPLY_TOTAL));
-
-
     public static final RegistryObject<MobEffect> DISARM = EFFECTS.register("disarm",
-            () -> new StatusEffectsMobEffect(MobEffectCategory.HARMFUL, 16447222));
+            () -> new Disarm(MobEffectCategory.HARMFUL, 16447222));
 
     public static final RegistryObject<MobEffect> DOOMED = EFFECTS.register("doomed",
             () -> new Doomed(MobEffectCategory.HARMFUL, 0));

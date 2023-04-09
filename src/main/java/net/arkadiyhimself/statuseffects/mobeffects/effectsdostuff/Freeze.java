@@ -1,6 +1,6 @@
 package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
-import net.arkadiyhimself.statuseffects.capability.FreezeEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

@@ -30,6 +30,7 @@ public class StatusEffectsSounds {
  public static final StatusEffectsSounds UNDOOMED = new StatusEffectsSounds("undoomed");
  public static final StatusEffectsSounds DOOMED = new StatusEffectsSounds("doomed");
  public static final StatusEffectsSounds FALLEN_BREATH = new StatusEffectsSounds("fallen_breath");
+ public static final StatusEffectsSounds ATTACK_DENIED = new StatusEffectsSounds("attack_denied");
  public static void register(IEventBus eventBus) {
   SOUND_EVENTS.register(eventBus);
  }

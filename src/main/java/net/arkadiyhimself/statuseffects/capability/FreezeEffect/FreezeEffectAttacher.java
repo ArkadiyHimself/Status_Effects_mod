@@ -1,4 +1,4 @@
-package net.arkadiyhimself.statuseffects.capability;
+package net.arkadiyhimself.statuseffects.capability.FreezeEffect;
 
 import dev._100media.capabilitysyncer.core.CapabilityAttacher;
 import net.arkadiyhimself.statuseffects.StatusEffects;

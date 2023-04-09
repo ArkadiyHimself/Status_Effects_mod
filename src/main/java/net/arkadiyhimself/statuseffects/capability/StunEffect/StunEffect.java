@@ -1,4 +1,4 @@
-package net.arkadiyhimself.statuseffects.capability;
+package net.arkadiyhimself.statuseffects.capability.StunEffect;
 
 import dev._100media.capabilitysyncer.core.LivingEntityCapability;
 import dev._100media.capabilitysyncer.network.EntityCapabilityStatusPacket;
@@ -9,7 +9,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public class StunScale extends LivingEntityCapability {
+public class StunEffect extends LivingEntityCapability {
 
     // update data
     public void updateData() {
@@ -17,12 +17,12 @@ public class StunScale extends LivingEntityCapability {
     }
 
     // SyncedCapability related stuff
-    public StunScale(LivingEntity entity) {
+    public StunEffect(LivingEntity entity) {
         super(entity);
     }
     @Override
     public EntityCapabilityStatusPacket createUpdatePacket() {
-        return new SimpleEntityCapabilityStatusPacket(this.livingEntity.getId(), StunScaleAttacher.STUN_POINTS_CAPABILITY_RL, this);
+        return new SimpleEntityCapabilityStatusPacket(this.livingEntity.getId(), StunEffectAttacher.STUN_EFFECT_CAPABILITY_RL, this);
     }
     @Override
     public SimpleChannel getNetworkChannel() {

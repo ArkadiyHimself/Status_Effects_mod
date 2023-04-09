@@ -3,8 +3,9 @@ package net.arkadiyhimself.statuseffects.networking;
 import com.google.common.collect.ImmutableList;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
 import net.arkadiyhimself.statuseffects.StatusEffects;
-import net.arkadiyhimself.statuseffects.capability.FreezeEffectAttacher;
-import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
+import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
 import net.arkadiyhimself.statuseffects.networking.packets.UndoomedSoundS2CPacket;
@@ -36,8 +37,9 @@ public class NetworkHandler {
                 .add(UndoomedSoundS2CPacket::register)
                 .add(RingingInEarsS2CPacket::register)
                 .build();
-        SimpleEntityCapabilityStatusPacket.registerRetriever(StunScaleAttacher.STUN_POINTS_CAPABILITY_RL,StunScaleAttacher::getStunScaleUnwrap);
+        SimpleEntityCapabilityStatusPacket.registerRetriever(StunEffectAttacher.STUN_EFFECT_CAPABILITY_RL, StunEffectAttacher::getStunEffectUnwrap);
         SimpleEntityCapabilityStatusPacket.registerRetriever(FreezeEffectAttacher.HAS_FREEZE_CAPABILITY_RL, FreezeEffectAttacher::getHasFreezeUnwrap);
+        SimpleEntityCapabilityStatusPacket.registerRetriever(DisarmEffectAttacher.HAS_DISARM_CAPABILITY_RL, DisarmEffectAttacher::getHasDisarmUnwrap);
         packets.forEach(consumer -> consumer.accept(INSTANCE, getNextId()));
     }
 
@@ -48,5 +50,4 @@ public class NetworkHandler {
     public static <MSG> void sentToPlayer(MSG msg, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
     }
-
 }

@@ -3,8 +3,9 @@ package net.arkadiyhimself.statuseffects;
 import com.mojang.logging.LogUtils;
 import net.arkadiyhimself.statuseffects.attributes.StatusEffectsAttributes;
 import net.arkadiyhimself.statuseffects.blocks.StatusEffectsBlocks;
-import net.arkadiyhimself.statuseffects.capability.FreezeEffectAttacher;
-import net.arkadiyhimself.statuseffects.capability.StunScaleAttacher;
+import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
 import net.arkadiyhimself.statuseffects.items.StatusEffectsModItem;
 import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
@@ -47,8 +48,11 @@ public class StatusEffects
         MinecraftForge.EVENT_BUS.register(this);
 
         modEventBus.addListener(this::addCreative);
-        StunScaleAttacher.register();
+
+        // capabilities
+        StunEffectAttacher.register();
         FreezeEffectAttacher.register();
+        DisarmEffectAttacher.register();
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

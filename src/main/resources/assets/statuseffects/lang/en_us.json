@@ -5,13 +5,12 @@
   "effect.statuseffects.doomed": "§4§lDOOMED",
   "effect.statuseffects.disarm": "§7Disarmed",
 
-  "gui.statuseffects.stun_bar": "Stun Bar",
-
   "subtitles.whisper1" : "Join us",
-  "subtitles.whisper2" : "It is your chance!",
+  "subtitles.whisper2" : "It is your chance",
   "subtitles.whisper3" : "Rest",
-  "subtitles.whisper4" : "It is good here",
-  "subtitles.whisper5" : "Become one of us!",
+  "subtitles.whisper4" : "It is good down there",
+  "subtitles.whisper5" : "Be one of us",
+  "subtitles.doomed" : "§4§lYOU ARE DOOMED",
 
   "subtitles.swordclash" : "Stunned!"
 }

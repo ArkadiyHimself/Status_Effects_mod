@@ -4,8 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arkadiyhimself.statuseffects.StatusEffects;
-import net.arkadiyhimself.statuseffects.capability.FreezeEffect;
-import net.arkadiyhimself.statuseffects.capability.FreezeEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
 import net.arkadiyhimself.statuseffects.client.AboveEntititesRenderer.SnowCrystalType;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.minecraft.client.Minecraft;
@@ -33,6 +33,8 @@ import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Quaternionf;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber(modid = StatusEffects.MODID)
 public class FreezeEffectStuff {
@@ -94,8 +96,13 @@ public class FreezeEffectStuff {
 
     @SubscribeEvent
     public static void renderSnowCrystal(RenderLivingEvent.Pre event) {
+        AtomicBoolean isDisarmed = new AtomicBoolean(false);
+        DisarmEffectAttacher.getHasDisarm(event.getEntity()).ifPresent(disarmEffect -> {
+            if (disarmEffect.isDisarmed()) { isDisarmed.set(true); }
+        });
+        if (isDisarmed.get()) { return; }
         if (event.getEntity() instanceof Player player) {
-            if (player.isSpectator() || player.isCreative()) { return; }
+            if (player.isSpectator() || player.isCreative() || player == Minecraft.getInstance().player) { return; }
         }
         LivingEntity entity = event.getEntity();
         PoseStack poseStack = event.getPoseStack();
@@ -110,9 +117,9 @@ public class FreezeEffectStuff {
             }
         }
         poseStack.pushPose();
-        final float globalScale = 0.015F;
+        final float globalScale = 0.0625F;
         Quaternionf cameraOrientation = Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation();
-        poseStack.translate(0, entity.getBbHeight() + 1.5F, 0);
+        poseStack.translate(0, entity.getBbHeight() + 2.0F, 0);
         poseStack.mulPose(cameraOrientation);
         final int light = 0xF000F0;
         poseStack.scale(-globalScale, -globalScale, -globalScale);
@@ -121,16 +128,16 @@ public class FreezeEffectStuff {
         FreezeEffectAttacher.getHasFreeze(entity).ifPresent(hasFreezeEffect -> {
             if (hasFreezeEffect.isFrozen()) {
                 int alpha = (int) Math.ceil((float) hasFreezeEffect.getCurrentDuration() / (float) hasFreezeEffect.getMaxDuration() * 255);
-                snowCrystal.vertex(poseStack.last().pose(), -32, 0, 0.001F).color(255, 255, 255, alpha).uv(0.0F, 0.0F).uv2(light).endVertex();
-                snowCrystal.vertex(poseStack.last().pose(), -32, 64, 0.001F).color(255, 255, 255, alpha).uv(0.0F, 1.0F).uv2(light).endVertex();
-                snowCrystal.vertex(poseStack.last().pose(), 32, 64, 0.001F).color(255, 255, 255, alpha).uv(1.0F, 1.0F).uv2(light).endVertex();
-                snowCrystal.vertex(poseStack.last().pose(), 32, 0, 0.001F).color(255, 255, 255, alpha).uv(1.0F, 0.0F).uv2(light).endVertex();
+                snowCrystal.vertex(poseStack.last().pose(), -8, 0, 0).color(255, 255, 255, alpha).uv(0.0F, 0.0F).uv2(light).endVertex();
+                snowCrystal.vertex(poseStack.last().pose(), -8, 16, 0).color(255, 255, 255, alpha).uv(0.0F, 1.0F).uv2(light).endVertex();
+                snowCrystal.vertex(poseStack.last().pose(), 8, 16, 0).color(255, 255, 255, alpha).uv(1.0F, 1.0F).uv2(light).endVertex();
+                snowCrystal.vertex(poseStack.last().pose(), 8, 0, 0).color(255, 255, 255, alpha).uv(1.0F, 0.0F).uv2(light).endVertex();
             } else if (entity.getTicksFrozen() > 0) {
                 int freezePercent = (int) (entity.getPercentFrozen() * 235);
-                snowCrystal.vertex(poseStack.last().pose(), -32, 0, 0.001F).color(255, 255, 255, 20 + freezePercent).uv(0.0F, 0.0F).uv2(light).endVertex();
-                snowCrystal.vertex(poseStack.last().pose(), -32, 64, 0.001F).color(255, 255, 255, 20 + freezePercent).uv(0.0F, 1.0F).uv2(light).endVertex();
-                snowCrystal.vertex(poseStack.last().pose(), 32, 64, 0.001F).color(255, 255, 255, 20 + freezePercent).uv(1.0F, 1.0F).uv2(light).endVertex();
-                snowCrystal.vertex(poseStack.last().pose(), 32, 0, 0.001F).color(255, 255, 255, 20 + freezePercent).uv(1.0F, 0.0F).uv2(light).endVertex();
+                snowCrystal.vertex(poseStack.last().pose(), -8, 0, 0).color(255, 255, 255, 20 + freezePercent).uv(0.0F, 0.0F).uv2(light).endVertex();
+                snowCrystal.vertex(poseStack.last().pose(), -8, 16, 0).color(255, 255, 255, 20 + freezePercent).uv(0.0F, 1.0F).uv2(light).endVertex();
+                snowCrystal.vertex(poseStack.last().pose(), 8, 16, 0).color(255, 255, 255, 20 + freezePercent).uv(1.0F, 1.0F).uv2(light).endVertex();
+                snowCrystal.vertex(poseStack.last().pose(), 8, 0, 0).color(255, 255, 255, 20 + freezePercent).uv(1.0F, 0.0F).uv2(light).endVertex();
             }
         });
         poseStack.popPose();
