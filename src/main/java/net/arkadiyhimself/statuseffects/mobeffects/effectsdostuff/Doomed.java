@@ -1,5 +1,6 @@
 package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
+import net.arkadiyhimself.statuseffects.capability.DoomedEffect.DoomedEffectAttacher;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
 import net.arkadiyhimself.statuseffects.sound.SoundWhispers;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
@@ -18,6 +19,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public class Doomed extends MobEffect {
+    boolean isNotDoomed;
     double x;
     double y;
     double z;
@@ -41,6 +43,7 @@ public class Doomed extends MobEffect {
     @Override
     public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
         doplaysound = pDuration == 20;
+        isNotDoomed = pDuration < 2;
         return true;
     }
 
@@ -84,14 +87,16 @@ public class Doomed extends MobEffect {
             // the game randomly decides which whisper sound to play
             int num = random.nextInt(0,  SoundWhispers.amount);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundWhispers.whispers.get(num).getSound(), 1F, 1F));
-            // randomly decide cooldown between 10 and 12 seconds
+            // randomly decide cool down between 10 and 12 seconds
             whispercooldown = random.nextInt(200, 240);
         }
 
         if (doplaysound && pLivingEntity == Minecraft.getInstance().player) {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.UNDOOMED.getSound(), 1F, 1F));
         }
-
+        DoomedEffectAttacher.getHasDoomed(pLivingEntity).ifPresent(doomedEffect -> {
+            doomedEffect.setDoomed(!isNotDoomed);
+        });
         super.applyEffectTick(pLivingEntity, pAmplifier);
     }
 

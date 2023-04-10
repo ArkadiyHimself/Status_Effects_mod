@@ -11,6 +11,9 @@ import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.arkadiyhimself.statuseffects.sound.SwordClashSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,15 +28,20 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Quaternionf;
+import team.creative.creativecore.common.gui.event.GuiEvent;
+import team.creative.creativecore.common.gui.event.GuiEventManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = StatusEffects.MODID)
@@ -76,6 +84,25 @@ public class StunEffectStuff {
                 stunEffect.setCurrentDuration(0);
                 stunEffect.updateData();
             });
+        }
+    }
+    public static List<Class<? extends Screen>> cancelledGui = new ArrayList<>() {{
+        add(BookEditScreen.class);
+        add(BookViewScreen.class);
+        add(AbstractContainerScreen.class);
+        add(HorseInventoryScreen.class);
+        add(InventoryScreen.class);
+    }};
+    @SubscribeEvent
+    public static void cancelGui(ScreenEvent.Opening event) {
+        if (Minecraft.getInstance().level != null) {
+            if (Minecraft.getInstance().player.hasEffect(StatusEffectsMobEffect.STUN.get())) {
+                for (Class screen : cancelledGui) {
+                    if (event.getNewScreen().getClass() == screen) {
+                        event.setCanceled(true);
+                    }
+                }
+            }
         }
     }
     @SubscribeEvent

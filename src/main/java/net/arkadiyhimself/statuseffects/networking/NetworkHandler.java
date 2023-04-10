@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
 import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.DoomedEffect.DoomedEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
@@ -40,6 +41,7 @@ public class NetworkHandler {
         SimpleEntityCapabilityStatusPacket.registerRetriever(StunEffectAttacher.STUN_EFFECT_CAPABILITY_RL, StunEffectAttacher::getStunEffectUnwrap);
         SimpleEntityCapabilityStatusPacket.registerRetriever(FreezeEffectAttacher.HAS_FREEZE_CAPABILITY_RL, FreezeEffectAttacher::getHasFreezeUnwrap);
         SimpleEntityCapabilityStatusPacket.registerRetriever(DisarmEffectAttacher.HAS_DISARM_CAPABILITY_RL, DisarmEffectAttacher::getHasDisarmUnwrap);
+        SimpleEntityCapabilityStatusPacket.registerRetriever(DoomedEffectAttacher.HAS_DOOMED_CAPABILITY_RL, DoomedEffectAttacher::getHasDoomedUnwrap);
         packets.forEach(consumer -> consumer.accept(INSTANCE, getNextId()));
     }
 

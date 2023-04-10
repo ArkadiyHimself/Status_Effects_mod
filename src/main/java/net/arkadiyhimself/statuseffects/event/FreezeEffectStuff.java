@@ -5,7 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffect;
 import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffect;
 import net.arkadiyhimself.statuseffects.client.AboveEntititesRenderer.SnowCrystalType;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.minecraft.client.Minecraft;
@@ -26,6 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -39,6 +42,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Mod.EventBusSubscriber(modid = StatusEffects.MODID)
 public class FreezeEffectStuff {
     public static final ResourceLocation BAR_GUI = new ResourceLocation(StatusEffects.MODID, "textures/gui/statuseffects_bar_gui.png");
+    @SubscribeEvent
+    public static void registerCaps(RegisterCapabilitiesEvent event) {
+        event.register(FreezeEffect.class);
+    }
     @SubscribeEvent
     public static void damageFromFreeze(LivingDamageEvent event) {
         if (event.getSource() == DamageSource.FREEZE) {

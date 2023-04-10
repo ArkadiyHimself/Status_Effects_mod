@@ -2,11 +2,16 @@ package net.arkadiyhimself.statuseffects.event;
 
 import net.arkadiyhimself.statuseffects.attributes.StatusEffectsAttributes;
 import net.arkadiyhimself.statuseffects.StatusEffects;
+import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
 import net.arkadiyhimself.statuseffects.particles.custom.DoomedSouls;
 import net.arkadiyhimself.statuseffects.particles.custom.FallenSoul;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -32,5 +37,10 @@ public class RegistryEvent {
                 event.add(entityType, StatusEffectsAttributes.STUN_POINTS.get());
             }
         });
+    }
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public static void renderSkullHearts(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("player_health", DoomedEffectStuff.DOOMED_HEARTS);
     }
 }

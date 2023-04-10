@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.arkadiyhimself.statuseffects.attributes.StatusEffectsAttributes;
 import net.arkadiyhimself.statuseffects.blocks.StatusEffectsBlocks;
 import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.DoomedEffect.DoomedEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
 import net.arkadiyhimself.statuseffects.items.StatusEffectsModItem;
@@ -53,6 +54,7 @@ public class StatusEffects
         StunEffectAttacher.register();
         FreezeEffectAttacher.register();
         DisarmEffectAttacher.register();
+        DoomedEffectAttacher.register();
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

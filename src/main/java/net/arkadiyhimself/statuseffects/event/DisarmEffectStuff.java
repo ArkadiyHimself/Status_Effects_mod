@@ -3,7 +3,9 @@ package net.arkadiyhimself.statuseffects.event;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arkadiyhimself.statuseffects.StatusEffects;
+import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffect;
 import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAttacher;
+import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffect;
 import net.arkadiyhimself.statuseffects.client.AboveEntititesRenderer.DisarmedSwordType;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
@@ -18,6 +20,7 @@ import net.minecraft.world.entity.ai.behavior.warden.SonicBoom;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
@@ -31,6 +34,10 @@ public class DisarmEffectStuff {
     static int deniedSoundCooldown = 20;
     static double iconHeight = 5F;
     static boolean goUp;
+    @SubscribeEvent
+    public static void registerCaps(RegisterCapabilitiesEvent event) {
+        event.register(DisarmEffect.class);
+    }
     @SubscribeEvent
     static void disarmPlayer(AttackEntityEvent event) {
         if (event.isCancelable()) {
