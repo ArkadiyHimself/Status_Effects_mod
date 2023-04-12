@@ -24,38 +24,4 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = StatusEffects.MODID)
 public class StatusEffectsEventHandler {
-    @SubscribeEvent
-    public static void damageEffectsApplying(LivingDamageEvent event) {
-        if ("sonic_boom".equals(event.getSource().getMsgId())) {
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), 200, 1, false, false, false));
-            if (event.getEntity() instanceof Player) {
-                Entity entity = event.getEntity();
-                NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
-            }
-        }
-        if (event.getSource().isExplosion() && event.getAmount() > 4) {
-            int i = (int) event.getAmount() * 10;
-            event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.DEAFENING.get(), Math.min(i, 300), 1, false, false));
-            if (event.getEntity() instanceof Player) {
-                Entity entity = event.getEntity();
-                NetworkHandler.sentToPlayer(new RingingInEarsS2CPacket(), (ServerPlayer) entity);
-            }
-
-        }
-    }
-    @SubscribeEvent
-    static void muteSounds(PlaySoundEvent event) {
-        boolean exception = false;
-        if (event.getSound() instanceof SimpleSoundInstance) {
-            exception = event.getName().equals("ringing_long") || event.getName().equals("entity.warden.sonic_boom")
-                    || event.getName().equals("entity.generic.explode") || event.getName().equals("ui.toast.challenge_complete")
-                    || event.getName().equals("doomed") || event.getName().equals("undoomed");
-        }
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (event.isCancelable() && Minecraft.getInstance().level != null && player.hasEffect(StatusEffectsMobEffect.DEAFENING.get()) && !exception) {
-            event.setSound(null);
-        } else if (Minecraft.getInstance().level != null && player.hasEffect(StatusEffectsMobEffect.DEAFENING.get())) {
-
-        }
-    }
 }

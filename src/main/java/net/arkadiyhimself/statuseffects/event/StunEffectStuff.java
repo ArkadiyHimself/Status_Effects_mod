@@ -8,6 +8,9 @@ import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffect;
 import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
 import net.arkadiyhimself.statuseffects.client.AboveEntititesRenderer.StunBarType;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
+import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
+import net.arkadiyhimself.statuseffects.networking.packets.KickOutOfGuiS2CPacket;
+import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.arkadiyhimself.statuseffects.sound.SwordClashSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -15,7 +18,11 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +30,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -144,6 +152,9 @@ public class StunEffectStuff {
     }
     @SubscribeEvent
     public static void stunApplied(MobEffectEvent.Added event) {
+        if(event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get() && event.getEntity() instanceof Player) {
+            NetworkHandler.sentToPlayer(new KickOutOfGuiS2CPacket(), (ServerPlayer) event.getEntity());
+        }
         if(event.getEffectInstance().getEffect() == StatusEffectsMobEffect.STUN.get()) {
 
             // updates data of StunScale capability
@@ -194,7 +205,7 @@ public class StunEffectStuff {
                 if (event.getSource() == DamageSource.FALL || event.getSource().isExplosion()) {
                     int instaStunDuration = (int) event.getAmount() * 5;
                     int finalDuration = Math.max(instaStunDuration, prematureStun);
-                    event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(finalDuration, 150)));
+                    event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), Math.min(finalDuration, 150), 0,false,false));
                     return;
                 }
                 if ("mob".equals(event.getSource().getMsgId()) || "player".equals(event.getSource().getMsgId())) {
@@ -204,12 +215,20 @@ public class StunEffectStuff {
                     newStunPoints = Math.max(minStunPointsAdded, newStunPoints);
                     stunEffect.addStunPoints(Math.min(stunEffect.getMaxStunPointsFromHit(), newStunPoints));
                     stunEffect.setDecayDelay(50);
+                    stunEffect.updateData();
                 }
                 if (stunEffect.getStunPoints() == stunEffect.getMaxStunPoints()) {
                     int duration = stunEffect.getDefaultStunDurationFromHits();
-                    event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), duration, 1, false, false, false));
+                    event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), duration, 0, false, false));
                     int num = random.nextInt(0, SwordClashSounds.amount);
                     event.getEntity().playSound(SwordClashSounds.swordClashes.get(num).getSound(), 1F, 1F);
+                    double x = event.getEntity().getX();
+                    double y = event.getEntity().getY();
+                    double z = event.getEntity().getZ();
+                    event.getEntity().level.playSound(null, event.getEntity().blockPosition(), SwordClashSounds.SWORDCLASH1.getSound(), SoundSource.NEUTRAL, 1F,1F);
+                    Minecraft.getInstance().level.playSound(null, event.getEntity().blockPosition(), SwordClashSounds.SWORDCLASH1.getSound(), SoundSource.HOSTILE, 1F, 1F);
+                    event.getEntity().playSound(SwordClashSounds.SWORDCLASH1.getSound(), 1F, 1F);
+                    Minecraft.getInstance().level.playSound(null, x, y, z, SwordClashSounds.SWORDCLASH1.getSound(), SoundSource.NEUTRAL, 1F,1F);
                 }
                 stunEffect.updateData();
             });
@@ -237,7 +256,7 @@ public class StunEffectStuff {
             stunEffect.setDecayDelay(Math.min(stunEffect.getDecayDelay(), 30));
             stunEffect.updateData();
             if (stunEffect.getStunPoints() == stunEffect.getMaxStunPoints()) {
-                event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), stunEffect.getDefaultStunDurationFromHits(), 1, false, false));
+                event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), stunEffect.getDefaultStunDurationFromHits(), 0, false, false));
             }
         });
         if (source.getEntity() instanceof LivingEntity entity) {
@@ -248,7 +267,7 @@ public class StunEffectStuff {
                 stunEffect.setDecayDelay(Math.min(stunEffect.getDecayDelay(), 30));
                 stunEffect.updateData();
                 if (stunEffect.getStunPoints() == stunEffect.getMaxStunPoints()) {
-                    entity.addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), stunEffect.getDefaultStunDurationFromHits(), 1, false, false));
+                    entity.addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), stunEffect.getDefaultStunDurationFromHits(), 0, false, false));
                 }
             });
         }

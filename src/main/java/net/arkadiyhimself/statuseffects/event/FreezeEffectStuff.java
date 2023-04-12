@@ -8,6 +8,7 @@ import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAtta
 import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffect;
 import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffect;
+import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
 import net.arkadiyhimself.statuseffects.client.AboveEntititesRenderer.SnowCrystalType;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.minecraft.client.Minecraft;
@@ -126,7 +127,10 @@ public class FreezeEffectStuff {
         poseStack.pushPose();
         final float globalScale = 0.0625F;
         Quaternionf cameraOrientation = Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation();
-        poseStack.translate(0, entity.getBbHeight() + 2.0F, 0);
+        StunEffectAttacher.getStunEffect(event.getEntity()).ifPresent(stunEffect -> {
+            if (stunEffect.isStunned() || stunEffect.getStunPoints() > 0) { poseStack.translate(0, entity.getBbHeight() + 2.0F, 0); }
+            else { poseStack.translate(0, entity.getBbHeight() + 1.5F, 0); }
+        });
         poseStack.mulPose(cameraOrientation);
         final int light = 0xF000F0;
         poseStack.scale(-globalScale, -globalScale, -globalScale);

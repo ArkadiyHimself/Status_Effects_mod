@@ -13,6 +13,7 @@ import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
 import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
+import net.arkadiyhimself.statuseffects.sound.SwordClashSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
@@ -21,6 +22,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -115,15 +117,11 @@ public class DoomedEffectStuff implements IGuiOverlay {
     private static boolean isDoomed(LivingEntity entity) { return entity.hasEffect(StatusEffectsMobEffect.DOOMED.get()); }
     @SubscribeEvent
     public static void tookDamage(LivingDamageEvent event) {
-        if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get()) && event.getEntity().getMaxHealth() <= 100) {
-            LivingEntity entity = event.getEntity();
-            event.setAmount(Float.MAX_VALUE);
-            double x = entity.getX();
-            double y = entity.getY();
-            double z = entity.getZ();
-            entity.level.addParticle(StatusEffectsParticles.FALLEN_SOUL.get(), x, y, z, 0, 0, 0);
-            entity.playSound(StatusEffectsSounds.FALLEN_BREATH.getSound(),1F,1F);
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.FALLEN_BREATH.getSound(),1F,1F));
+        if (!event.getEntity().level.isClientSide()) {
+            if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get()) && event.getEntity().getMaxHealth() <= 100) {
+                event.setAmount(Float.MAX_VALUE);
+                event.getEntity().level.playSound(null, event.getEntity().blockPosition(), StatusEffectsSounds.FALLEN_BREATH.getSound(), SoundSource.HOSTILE, 10F, 1F);
+            }
         }
     }
 
@@ -158,8 +156,6 @@ public class DoomedEffectStuff implements IGuiOverlay {
         LocalPlayer player = Minecraft.getInstance().player;
         if (event.getOverlay().equals(VanillaGuiOverlay.PLAYER_HEALTH.type()) && isDoomed(player)) {
             event.setCanceled(true);
-            Gui gui = Minecraft.getInstance().gui;
-
         }
     }
     @Override

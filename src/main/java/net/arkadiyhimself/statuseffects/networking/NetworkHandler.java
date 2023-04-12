@@ -7,9 +7,7 @@ import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAtta
 import net.arkadiyhimself.statuseffects.capability.DoomedEffect.DoomedEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.FreezeEffect.FreezeEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
-import net.arkadiyhimself.statuseffects.networking.packets.DoomedSoundS2CPacket;
-import net.arkadiyhimself.statuseffects.networking.packets.RingingInEarsS2CPacket;
-import net.arkadiyhimself.statuseffects.networking.packets.UndoomedSoundS2CPacket;
+import net.arkadiyhimself.statuseffects.networking.packets.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkRegistry;
@@ -37,6 +35,8 @@ public class NetworkHandler {
                 .add(DoomedSoundS2CPacket::register)
                 .add(UndoomedSoundS2CPacket::register)
                 .add(RingingInEarsS2CPacket::register)
+                .add(AttackDeniedSoundS2CPacket::register)
+                .add(KickOutOfGuiS2CPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(StunEffectAttacher.STUN_EFFECT_CAPABILITY_RL, StunEffectAttacher::getStunEffectUnwrap);
         SimpleEntityCapabilityStatusPacket.registerRetriever(FreezeEffectAttacher.HAS_FREEZE_CAPABILITY_RL, FreezeEffectAttacher::getHasFreezeUnwrap);

@@ -78,9 +78,11 @@ public class Doomed extends MobEffect {
             boolean negativeZ = random.nextBoolean();
             z = negativeZ ? z * (-1) : z;
             // in the end, the area in which soul particles can spawn looks like side of a cylinder
-            Minecraft.getInstance().level.addParticle(doomedSouls.get(num).get(), true,
-                    pLivingEntity.getX() + x, pLivingEntity.getY() + y, pLivingEntity.getZ() + z,
-                    dx.get() * 1.5, dy.get() * 0.2 + 0.1, dz.get() * 1.5);
+            if (Minecraft.getInstance().level != null) {
+                Minecraft.getInstance().level.addParticle(doomedSouls.get(num).get(), true,
+                        pLivingEntity.getX() + x, pLivingEntity.getY() + y, pLivingEntity.getZ() + z,
+                        dx.get() * 1.5, dy.get() * 0.2 + 0.1, dz.get() * 1.5);
+            }
         }
 
         if (dowhisper && !doplaysound) {

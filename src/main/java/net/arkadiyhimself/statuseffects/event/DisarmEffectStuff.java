@@ -6,6 +6,7 @@ import net.arkadiyhimself.statuseffects.StatusEffects;
 import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffect;
 import net.arkadiyhimself.statuseffects.capability.DisarmEffect.DisarmEffectAttacher;
 import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffect;
+import net.arkadiyhimself.statuseffects.capability.StunEffect.StunEffectAttacher;
 import net.arkadiyhimself.statuseffects.client.AboveEntititesRenderer.DisarmedSwordType;
 import net.arkadiyhimself.statuseffects.mobeffects.StatusEffectsMobEffect;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
@@ -108,7 +109,10 @@ public class DisarmEffectStuff {
         MultiBufferSource buffers = event.getMultiBufferSource();
         poseStack.pushPose();
         final float globalScale = 0.0625F;
-        poseStack.translate(0, entity.getBbHeight() + 2.25, 0);
+        StunEffectAttacher.getStunEffect(event.getEntity()).ifPresent(stunEffect -> {
+            if (stunEffect.isStunned() || stunEffect.getStunPoints() > 0) { poseStack.translate(0, entity.getBbHeight() + 3.0F, 0); }
+            else { poseStack.translate(0, entity.getBbHeight() + 2.5F, 0); }
+        });
         poseStack.mulPose(cameraOrientation);
         final int light = 0xF000F0;
         poseStack.scale(-globalScale, -globalScale, -globalScale);
@@ -118,8 +122,8 @@ public class DisarmEffectStuff {
         DisarmEffectAttacher.getHasDisarm(entity).ifPresent(disarmEffect -> {
             if (disarmEffect.isDisarmed()) {
                 brokenSword.vertex(poseStack.last().pose(), -10.0F, (float) iconHeight, 0).color(255, 255, 255, 255).uv(0.0F, 0.0F).uv2(light).endVertex();
-                brokenSword.vertex(poseStack.last().pose(), -10.0F, 20 + (float) iconHeight, 0).color(255, 255, 255, 255).uv(0.0F, 1.0F).uv2(light).endVertex();
-                brokenSword.vertex(poseStack.last().pose(), 10.0F, 20 + (float) iconHeight, 0).color(255, 255, 255, 255).uv(1.0F, 1.0F).uv2(light).endVertex();
+                brokenSword.vertex(poseStack.last().pose(), -10.0F, 40 + (float) iconHeight, 0).color(255, 255, 255, 255).uv(0.0F, 1.0F).uv2(light).endVertex();
+                brokenSword.vertex(poseStack.last().pose(), 10.0F, 40 + (float) iconHeight, 0).color(255, 255, 255, 255).uv(1.0F, 1.0F).uv2(light).endVertex();
                 brokenSword.vertex(poseStack.last().pose(), 10.0F, (float) iconHeight, 0).color(255, 255, 255, 255).uv(1.0F, 0.0F).uv2(light).endVertex();
             }
         });

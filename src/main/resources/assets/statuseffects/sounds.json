@@ -33,6 +33,7 @@
     ]
   },
   "fallen_breath" : {
+    "subtitle" : "subtitles.fallen_breath",
     "sounds": [
       {
         "name": "statuseffects:fallen_breath",
