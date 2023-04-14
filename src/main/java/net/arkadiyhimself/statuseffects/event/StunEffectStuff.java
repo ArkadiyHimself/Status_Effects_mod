@@ -221,14 +221,7 @@ public class StunEffectStuff {
                     int duration = stunEffect.getDefaultStunDurationFromHits();
                     event.getEntity().addEffect(new MobEffectInstance(StatusEffectsMobEffect.STUN.get(), duration, 0, false, false));
                     int num = random.nextInt(0, SwordClashSounds.amount);
-                    event.getEntity().playSound(SwordClashSounds.swordClashes.get(num).getSound(), 1F, 1F);
-                    double x = event.getEntity().getX();
-                    double y = event.getEntity().getY();
-                    double z = event.getEntity().getZ();
-                    event.getEntity().level.playSound(null, event.getEntity().blockPosition(), SwordClashSounds.SWORDCLASH1.getSound(), SoundSource.NEUTRAL, 1F,1F);
-                    Minecraft.getInstance().level.playSound(null, event.getEntity().blockPosition(), SwordClashSounds.SWORDCLASH1.getSound(), SoundSource.HOSTILE, 1F, 1F);
-                    event.getEntity().playSound(SwordClashSounds.SWORDCLASH1.getSound(), 1F, 1F);
-                    Minecraft.getInstance().level.playSound(null, x, y, z, SwordClashSounds.SWORDCLASH1.getSound(), SoundSource.NEUTRAL, 1F,1F);
+                    event.getEntity().playSound(SwordClashSounds.swordClashes.get(num).getSound());
                 }
                 stunEffect.updateData();
             });

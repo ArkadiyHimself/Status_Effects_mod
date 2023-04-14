@@ -7,9 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class DoomedSouls extends RisingParticle {
-
     private final SpriteSet spriteSet;
-
     public DoomedSouls(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet spriteSet)  {
         super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
 
@@ -47,10 +45,7 @@ public class DoomedSouls extends RisingParticle {
     @OnlyIn(Dist.CLIENT)
     public static class Provider implements ParticleProvider<SimpleParticleType> {
         public final SpriteSet spriteSet;
-        public Provider(SpriteSet spriteSet) {
-            this.spriteSet = spriteSet;
-        }
-
+        public Provider(SpriteSet spriteSet) { this.spriteSet = spriteSet; }
         public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
             return new DoomedSouls(level, x, y, z, dx, dy, dz, this.spriteSet);
         }

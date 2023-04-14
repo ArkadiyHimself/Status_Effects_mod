@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +34,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingUseTotemEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -94,7 +96,7 @@ public class DoomedEffectStuff implements IGuiOverlay {
         RenderSystem.setShaderTexture(0, DOOMED_HEARTS_EMPTY_HALF);
         if (hasHalfMax) {
             GuiComponent.blit(poseStack, x - 91 + ((int) remainingMaxHealth / 2) * 8, y - 47 - (maxHealthRows - 1) * 8, 0, 0,
-                    9, 9, 8, 8);
+                    9,9,9,9);
         }
 
         RenderSystem.setShaderTexture(0, DOOMED_HEARTS_FULL);
@@ -111,17 +113,25 @@ public class DoomedEffectStuff implements IGuiOverlay {
         RenderSystem.setShaderTexture(0, DOOMED_HEARTS_FULL_HALF);
         if (hasHalfCurrent) {
             GuiComponent.blit(poseStack, x - 91 + ((int) remainingCurrentHealth / 2) * 8, y - 47 - (currentHealthRows - 1) * 8, 0, 0,
-                    9, 9, 8, 8);
+                    9, 9, 9, 9);
         }
     }));
     private static boolean isDoomed(LivingEntity entity) { return entity.hasEffect(StatusEffectsMobEffect.DOOMED.get()); }
     @SubscribeEvent
+    public static void ignoreTotem(LivingUseTotemEvent event) {
+        if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get())) { event.setCanceled(true); }
+    }
+    @SubscribeEvent
     public static void tookDamage(LivingDamageEvent event) {
-        if (!event.getEntity().level.isClientSide()) {
-            if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get()) && event.getEntity().getMaxHealth() <= 100) {
-                event.setAmount(Float.MAX_VALUE);
-                event.getEntity().level.playSound(null, event.getEntity().blockPosition(), StatusEffectsSounds.FALLEN_BREATH.getSound(), SoundSource.HOSTILE, 10F, 1F);
-            }
+        if (event.getEntity().hasEffect(StatusEffectsMobEffect.DOOMED.get()) && event.getEntity().getMaxHealth() <= 100) {
+            event.setAmount(Float.MAX_VALUE);
+            event.getEntity().playSound(StatusEffectsSounds.FALLEN_BREATH.get());
+//            event.getEntity().level.playSound(null, event.getEntity().blockPosition(), StatusEffectsSounds.FALLEN_BREATH.get(), SoundSource.AMBIENT);
+            double x = event.getEntity().getX();
+            double y = event.getEntity().getY();
+            double z = event.getEntity().getZ();
+            double height = event.getEntity().getBbHeight();
+            Minecraft.getInstance().level.addParticle(StatusEffectsParticles.FALLEN_SOUL.get(), x, y + height * 2/3, z,0.0D,-0.135D,0.0D);
         }
     }
 

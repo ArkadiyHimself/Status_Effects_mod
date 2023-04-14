@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Quaternionf;
@@ -47,7 +48,6 @@ public class DisarmEffectStuff {
             }
         }
     }
-
     @SubscribeEvent
     static void disarmMobs(LivingAttackEvent event) {
         if ("mob".equals(event.getSource().getMsgId())) {
@@ -84,7 +84,7 @@ public class DisarmEffectStuff {
             event.setCanceled(true);
             event.setSwingHand(false);
             if (deniedSoundCooldown == 0) {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.ATTACK_DENIED.getSound(), 1F, 1F));
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.ATTACK_DENIED.get(), 1F, 1F));
                 deniedSoundCooldown = 20;
             }
         }
@@ -110,8 +110,8 @@ public class DisarmEffectStuff {
         poseStack.pushPose();
         final float globalScale = 0.0625F;
         StunEffectAttacher.getStunEffect(event.getEntity()).ifPresent(stunEffect -> {
-            if (stunEffect.isStunned() || stunEffect.getStunPoints() > 0) { poseStack.translate(0, entity.getBbHeight() + 3.0F, 0); }
-            else { poseStack.translate(0, entity.getBbHeight() + 2.5F, 0); }
+            if (stunEffect.isStunned() || stunEffect.getStunPoints() > 0) { poseStack.translate(0, entity.getBbHeight() + 2.5F, 0); }
+            else { poseStack.translate(0, entity.getBbHeight() + 2.0F, 0); }
         });
         poseStack.mulPose(cameraOrientation);
         final int light = 0xF000F0;
@@ -122,8 +122,8 @@ public class DisarmEffectStuff {
         DisarmEffectAttacher.getHasDisarm(entity).ifPresent(disarmEffect -> {
             if (disarmEffect.isDisarmed()) {
                 brokenSword.vertex(poseStack.last().pose(), -10.0F, (float) iconHeight, 0).color(255, 255, 255, 255).uv(0.0F, 0.0F).uv2(light).endVertex();
-                brokenSword.vertex(poseStack.last().pose(), -10.0F, 40 + (float) iconHeight, 0).color(255, 255, 255, 255).uv(0.0F, 1.0F).uv2(light).endVertex();
-                brokenSword.vertex(poseStack.last().pose(), 10.0F, 40 + (float) iconHeight, 0).color(255, 255, 255, 255).uv(1.0F, 1.0F).uv2(light).endVertex();
+                brokenSword.vertex(poseStack.last().pose(), -10.0F, 20 + (float) iconHeight, 0).color(255, 255, 255, 255).uv(0.0F, 1.0F).uv2(light).endVertex();
+                brokenSword.vertex(poseStack.last().pose(), 10.0F, 20 + (float) iconHeight, 0).color(255, 255, 255, 255).uv(1.0F, 1.0F).uv2(light).endVertex();
                 brokenSword.vertex(poseStack.last().pose(), 10.0F, (float) iconHeight, 0).color(255, 255, 255, 255).uv(1.0F, 0.0F).uv2(light).endVertex();
             }
         });

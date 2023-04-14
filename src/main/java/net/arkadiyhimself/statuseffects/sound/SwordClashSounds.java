@@ -27,7 +27,7 @@ public class SwordClashSounds {
             create(ForgeRegistries.SOUND_EVENTS, StatusEffects.MODID);
     public static RegistryObject<SoundEvent> registerSoundSwordClash(String path) {
         return SWORD_CLASH_SOUNDS.register(path, () -> SoundEvent.createFixedRangeEvent
-                (new ResourceLocation(StatusEffects.MODID, path), 1F));
+                (new ResourceLocation(StatusEffects.MODID, path), 10F));
     }
     public static final SwordClashSounds SWORDCLASH1 = new SwordClashSounds("sword_clashing1");
     public static final SwordClashSounds SWORDCLASH2 = new SwordClashSounds("sword_clashing2");

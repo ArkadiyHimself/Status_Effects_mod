@@ -1,17 +1,22 @@
 package net.arkadiyhimself.statuseffects.mobeffects.effectsdostuff;
 
 import net.arkadiyhimself.statuseffects.capability.DoomedEffect.DoomedEffectAttacher;
+import net.arkadiyhimself.statuseffects.networking.NetworkHandler;
+import net.arkadiyhimself.statuseffects.networking.packets.UndoomedSoundS2CPacket;
 import net.arkadiyhimself.statuseffects.particles.StatusEffectsParticles;
 import net.arkadiyhimself.statuseffects.sound.SoundWhispers;
 import net.arkadiyhimself.statuseffects.sound.StatusEffectsSounds;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
@@ -30,7 +35,7 @@ public class Doomed extends MobEffect {
     int whispercooldown = 80;
 
     int soulcooldown = 20;
-    ArrayList<RegistryObject<SimpleParticleType>> doomedSouls = new ArrayList<>() {{
+    public static ArrayList<RegistryObject<SimpleParticleType>> doomedSouls = new ArrayList<>() {{
         add(StatusEffectsParticles.DOOMED_SOUL1);
         add(StatusEffectsParticles.DOOMED_SOUL2);
         add(StatusEffectsParticles.DOOMED_SOUL3);
@@ -85,7 +90,7 @@ public class Doomed extends MobEffect {
             }
         }
 
-        if (dowhisper && !doplaysound) {
+        if (dowhisper && !doplaysound && pLivingEntity == Minecraft.getInstance().player) {
             // the game randomly decides which whisper sound to play
             int num = random.nextInt(0,  SoundWhispers.amount);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundWhispers.whispers.get(num).getSound(), 1F, 1F));
@@ -93,8 +98,9 @@ public class Doomed extends MobEffect {
             whispercooldown = random.nextInt(200, 240);
         }
 
-        if (doplaysound && pLivingEntity == Minecraft.getInstance().player) {
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.UNDOOMED.getSound(), 1F, 1F));
+        if (doplaysound && pLivingEntity instanceof ServerPlayer player) {
+//            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(StatusEffectsSounds.UNDOOMED.get(), 1F, 1F));
+            NetworkHandler.sentToPlayer(new UndoomedSoundS2CPacket(), player);
         }
         DoomedEffectAttacher.getHasDoomed(pLivingEntity).ifPresent(doomedEffect -> {
             doomedEffect.setDoomed(!isNotDoomed);

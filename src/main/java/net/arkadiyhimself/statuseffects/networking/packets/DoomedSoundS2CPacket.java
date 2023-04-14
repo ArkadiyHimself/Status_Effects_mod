@@ -16,7 +16,7 @@ public record DoomedSoundS2CPacket() implements IPacket {
     public void handle(NetworkEvent.Context context) {
         context.enqueueWork(() -> {
             Minecraft.getInstance().getSoundManager().
-                    play(SimpleSoundInstance.forUI(StatusEffectsSounds.DOOMED.getSound(), 1.0F, 0.32F));
+                    play(SimpleSoundInstance.forUI(StatusEffectsSounds.DOOMED.get(), 1.0F, 0.32F));
         });
         context.setPacketHandled(true);
     }

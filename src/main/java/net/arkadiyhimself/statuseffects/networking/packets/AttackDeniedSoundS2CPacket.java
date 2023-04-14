@@ -14,7 +14,7 @@ public record AttackDeniedSoundS2CPacket() implements IPacket {
     public void handle(NetworkEvent.Context context) {
         context.enqueueWork(() -> {
             Minecraft.getInstance().getSoundManager().
-                        play(SimpleSoundInstance.forUI(StatusEffectsSounds.ATTACK_DENIED.getSound(), 1.0F, 0.32F));
+                        play(SimpleSoundInstance.forUI(StatusEffectsSounds.ATTACK_DENIED.get(), 1.0F, 0.32F));
         });
         context.setPacketHandled(true);
     }
